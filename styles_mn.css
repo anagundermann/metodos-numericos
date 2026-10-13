@@ -1,0 +1,392 @@
+
+/* =========================================
+   1. PALETA DE COLORES
+   Modificar aquí los colores del proyecto
+   ========================================= */
+
+:root {
+  /* Portada */
+  --color-portada-inicio: #101d35;
+  --color-portada-fin: #203d63;
+  --color-portada-texto: #ffffff;
+  --color-portada-subtexto: #cbd5e1;
+  --color-portada-etiqueta: #93c5fd;
+
+  /* Etiquetas de tecnologías */
+  --color-tecnologia-fondo: #304767;
+  --color-tecnologia-texto: #ffffff;
+
+  /* Tarjetas */
+  --color-tarjeta-fondo: #ffffff;
+  --color-tarjeta-borde: #e2e8f0;
+  --color-tarjeta-titulo: #212529;
+  --color-tarjeta-texto: #64748b;
+  --color-tarjeta-numero: #64748b;
+
+  /* Tarjetas matemáticas */
+  --color-modelo-fondo: #f1f5f9;
+  --color-modelo-borde: #e2e8f0;
+  --color-modelo-etiqueta: #64748b;
+  --color-modelo-texto: #1e293b;
+
+  /* Condiciones del problema */
+  --color-condiciones-fondo: #ffffff;
+  --color-condiciones-borde: #e2e8f0;
+  --color-condiciones-acento: #93c5fd;
+  --color-condiciones-titulo: #334155;
+
+  /* Simulaciones científicas */
+  --color-simulacion-fondo: #ffffff;
+  --color-simulacion-borde: #e2e8f0;
+  --color-simulacion-etiqueta: #64748b;
+  --color-simulacion-titulo: #1e293b;
+  --color-simulacion-texto: #475569;
+  --color-simulacion-acento: #3b82f6;
+  --color-resultado-fondo: #f1f5f9;
+}
+
+
+/* =========================================
+   2. PORTADA PRINCIPAL
+   ========================================= */
+
+.portada-cientifica {
+  background: linear-gradient(
+    135deg,
+    var(--color-portada-inicio),
+    var(--color-portada-fin)
+  );
+  color: var(--color-portada-texto);
+  padding: 52px 40px;
+  border-radius: 20px;
+  margin: 24px 0 28px;
+}
+
+.portada-etiqueta {
+  color: var(--color-portada-etiqueta);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 18px;
+}
+
+.portada-cientifica h1 {
+  color: var(--color-portada-texto);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.15;
+  margin-bottom: 18px;
+}
+
+.portada-cientifica p {
+  color: var(--color-portada-subtexto);
+  font-size: 1.05rem;
+  max-width: 650px;
+}
+
+
+/* =========================================
+   3. ETIQUETAS DE TECNOLOGÍAS
+   ========================================= */
+
+.tecnologias {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.tecnologias span {
+  background: var(--color-tecnologia-fondo);
+  color: var(--color-tecnologia-texto);
+  padding: 7px 13px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+
+/* =========================================
+   4. TARJETAS DE PROYECTOS
+   ========================================= */
+
+.tarjetas-proyecto {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 35px;
+}
+
+.tarjeta-proyecto {
+  border: 1px solid var(--color-tarjeta-borde);
+  border-radius: 14px;
+  padding: 22px;
+  background: var(--color-tarjeta-fondo);
+}
+
+.tarjeta-proyecto .numero {
+  color: var(--color-tarjeta-numero);
+  font-size: 0.8rem;
+}
+
+.tarjeta-proyecto h3 {
+  color: var(--color-tarjeta-titulo);
+  margin: 12px 0 6px;
+  font-size: 1.2rem;
+}
+
+.tarjeta-proyecto p {
+  color: var(--color-tarjeta-texto);
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+
+/* =========================================
+   5. DISEÑO RESPONSIVO
+   ========================================= */
+
+@media (max-width: 650px) {
+  .portada-cientifica {
+    padding: 32px 24px;
+  }
+
+  .tarjetas-proyecto {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================
+   6. OCULTAR ENCABEZADO AUTOMÁTICO DE QUARTO
+   ========================================= */
+
+#title-block-header {
+  display: none;
+}
+
+/* =========================================
+   8. CORREGIR ESTILO DE ENLACES EN TARJETAS
+   ========================================= */
+
+a.tarjeta-proyecto,
+a.tarjeta-proyecto:link,
+a.tarjeta-proyecto:visited,
+a.tarjeta-proyecto:hover,
+a.tarjeta-proyecto:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
+a.tarjeta-proyecto h3,
+a.tarjeta-proyecto p,
+a.tarjeta-proyecto .numero {
+  text-decoration: none;
+}
+
+a.tarjeta-proyecto:hover h3 {
+  color: var(--color-portada-fin);
+}
+
+a.tarjeta-proyecto .tarjeta-enlace {
+  color: var(--color-portada-fin);
+  text-decoration: none;
+}
+
+
+/* =========================================
+   9. SECCIONES CIENTÍFICAS
+   ========================================= */
+
+:root {
+  --color-seccion-acento: #3b82f6;
+  --color-seccion-titulo: #1e293b;
+  --color-seccion-linea: #e2e8f0;
+}
+
+/* Títulos principales de los tres modelos */
+#ecuación-del-calor,
+#ecuación-de-transporte,
+#sistema-masa-resorte-no-lineal {
+  color: var(--color-seccion-titulo);
+  border-bottom: 1px solid var(--color-seccion-linea);
+  border-left: 5px solid var(--color-seccion-acento);
+  padding: 12px 0 16px 20px;
+  margin-top: 65px;
+  margin-bottom: 30px;
+  scroll-margin-top: 25px;
+}
+
+/* Títulos secundarios dentro de los modelos */
+#ecuación-del-calor ~ section h3,
+#ecuación-de-transporte ~ section h3,
+#sistema-masa-resorte-no-lineal ~ section h3 {
+  color: var(--color-seccion-titulo);
+}
+
+
+/* =========================================
+   10. TARJETAS DE MODELOS MATEMÁTICOS
+   ========================================= */
+
+.modelo-matematico {
+  background: var(--color-modelo-fondo);
+  border: 1px solid var(--color-modelo-borde);
+  border-radius: 16px;
+  padding: 26px 30px;
+  margin: 28px 0;
+}
+
+.modelo-matematico .modelo-etiqueta {
+  color: var(--color-modelo-etiqueta);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.modelo-matematico .modelo-ecuacion {
+  color: var(--color-modelo-texto);
+  font-size: 1.15rem;
+  text-align: center;
+  overflow-x: auto;
+}
+
+@media (max-width: 650px) {
+  .modelo-matematico {
+    padding: 20px 16px;
+  }
+}
+
+
+/* =========================================
+   11. CONDICIONES INICIALES Y DE FRONTERA
+   ========================================= */
+
+.condiciones-problema {
+  background: var(--color-condiciones-fondo);
+  border: 1px solid var(--color-condiciones-borde);
+  border-left: 4px solid var(--color-condiciones-acento);
+  border-radius: 12px;
+  padding: 20px 26px;
+  margin: 18px 0 30px;
+}
+
+.condiciones-problema .condiciones-titulo {
+  color: var(--color-condiciones-titulo);
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.condiciones-problema p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================================
+   12. SIMULACIONES CIENTÍFICAS
+   ========================================= */
+
+.simulacion-cientifica {
+  background: var(--color-simulacion-fondo);
+  border: 1px solid var(--color-simulacion-borde);
+  border-radius: 16px;
+  padding: 28px;
+  margin: 30px 0;
+}
+
+.simulacion-etiqueta {
+  color: var(--color-simulacion-etiqueta);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.simulacion-titulo {
+  color: var(--color-simulacion-titulo);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.simulacion-descripcion {
+  color: var(--color-simulacion-texto);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.simulacion-grafico {
+  width: 100%;
+  min-width: 0;
+  margin: 20px 0;
+}
+
+/* Interpretación de resultados */
+
+.simulacion-resultado {
+  background: var(--color-resultado-fondo);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-top: 24px;
+}
+
+.simulacion-resultado h4 {
+  color: var(--color-simulacion-titulo);
+  font-size: 1rem;
+  margin-top: 0;
+}
+
+.simulacion-resultado p {
+  color: var(--color-simulacion-texto);
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+/* Adaptación a pantallas pequeñas */
+
+@media (max-width: 650px) {
+  .simulacion-cientifica {
+    padding: 18px;
+  }
+
+  .simulacion-resultado {
+    padding: 16px;
+  }
+}
+
+
+/* ==========================================
+   ÍNDICE LATERAL
+   ========================================== */
+
+#TOC {
+  border-left: 1px solid #e2e8f0;
+  padding-left: 18px;
+}
+
+#TOC > h2 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #64748b;
+  margin-bottom: 18px;
+}
+
+#TOC a {
+  color: #475569;
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+#TOC a:hover {
+  color: #2563eb;
+}
+
+#TOC .active {
+  color: #2563eb;
+  font-weight: 600;
+}
+
