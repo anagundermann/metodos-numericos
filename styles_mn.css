@@ -1,4 +1,3 @@
-
 /* =========================================
    1. PALETA DE COLORES
    Modificar aquí los colores del proyecto
@@ -41,7 +40,7 @@
   --color-simulacion-etiqueta: #64748b;
   --color-simulacion-titulo: #1e293b;
   --color-simulacion-texto: #475569;
-  --color-simulacion-acento: #3b82f6;
+  --color-simulacion-acento: #008FAD;
   --color-resultado-fondo: #f1f5f9;
 }
 
@@ -51,11 +50,9 @@
    ========================================= */
 
 .portada-cientifica {
-  background: linear-gradient(
-    135deg,
-    var(--color-portada-inicio),
-    var(--color-portada-fin)
-  );
+  background: linear-gradient(135deg,
+      var(--color-portada-inicio),
+      var(--color-portada-fin));
   color: var(--color-portada-texto);
   padding: 52px 40px;
   border-radius: 20px;
@@ -196,7 +193,7 @@ a.tarjeta-proyecto .tarjeta-enlace {
    ========================================= */
 
 :root {
-  --color-seccion-acento: #3b82f6;
+  --color-seccion-acento: #4876E8;
   --color-seccion-titulo: #1e293b;
   --color-seccion-linea: #e2e8f0;
 }
@@ -215,9 +212,9 @@ a.tarjeta-proyecto .tarjeta-enlace {
 }
 
 /* Títulos secundarios dentro de los modelos */
-#ecuación-del-calor ~ section h3,
-#ecuación-de-transporte ~ section h3,
-#sistema-masa-resorte-no-lineal ~ section h3 {
+#ecuación-del-calor~section h3,
+#ecuación-de-transporte~section h3,
+#sistema-masa-resorte-no-lineal~section h3 {
   color: var(--color-seccion-titulo);
 }
 
@@ -365,7 +362,7 @@ a.tarjeta-proyecto .tarjeta-enlace {
   padding-left: 18px;
 }
 
-#TOC > h2 {
+#TOC>h2 {
   font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -381,12 +378,86 @@ a.tarjeta-proyecto .tarjeta-enlace {
   transition: color 0.2s ease;
 }
 
+/* Enlaces del índice al pasar el cursor */
 #TOC a:hover {
-  color: #2563eb;
+  color: #4876E8 !important;
 }
 
-#TOC .active {
-  color: #2563eb;
+/* Sección activa del índice */
+#TOC a.active,
+#TOC .active,
+#TOC .nav-link.active {
+  color: #4876E8 !important;
   font-weight: 600;
 }
 
+
+
+/* Centrar los gráficos en sus tarjetas */
+.simulacion-grafico .cell-output-display {
+  display: flex;
+  justify-content: center;
+}
+
+/* ==========================================
+   CURSOR DE LOS GRÁFICOS PLOTLY
+   ========================================== */
+
+.js-plotly-plot .nsewdrag,
+.js-plotly-plot .nwse-resize,
+.js-plotly-plot .ewdrag,
+.js-plotly-plot .nsdrag,
+.js-plotly-plot .cursor-crosshair,
+.js-plotly-plot .cursor-move {
+  cursor: default !important;
+}
+
+/* =========================================
+   DESLIZADORES INTERACTIVOS — OBSERVABLE JS
+   ========================================= */
+input[type="range"] {
+  accent-color: #4876E8;
+}
+
+
+/* =========================================
+   INDICADORES DE RESULTADOS NUMÉRICOS
+   Aplicable a calor, transporte
+   ========================================= */
+
+.indicadores-numericos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 24px 0;
+}
+
+.indicador {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 22px;
+  min-width: 0;
+}
+
+.indicador-etiqueta {
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.indicador-valor {
+  color: #1e293b;
+  font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 650px) {
+  .indicadores-numericos {
+    grid-template-columns: 1fr;
+  }
+}

@@ -3,10 +3,16 @@
 title: "Métodos numéricos para ecuaciones diferenciales"
 subtitle: "Simulación, estabilidad y visualización interactiva"
 author: "Ana Gundermann"
+description: "Métodos numéricos en Python: masa-resorte no lineal, ecuación de transporte y ecuación del calor. Visualización, estabilidad y precisión."
+open-graph:
+  image: portada.png
+  image-alt: "Métodos numéricos en Python: sistemas dinámicos, transporte y difusión"
 format:
   html:
     theme: cosmo
     css: styles_mn.css
+    include-after-body: footer.html
+    lang: es
     title-block-style: none
     toc: true
     toc-title: "Contenido"
@@ -21,7 +27,7 @@ format:
 jupyter: python3
 
 execute:
-  cache: true
+  cache: false
 ---
 
 
@@ -35,7 +41,7 @@ execute:
 
   <p>
     Una exploración interactiva de sistemas dinámicos,
-    difusión y transporte mediante simulaciones en Python.
+    difusión y transporte con simulaciones en Python.
   </p>
 
   <div class="tecnologias">
@@ -74,84 +80,21 @@ execute:
 ```
 
 
+
 # Introducción
 
-Este proyecto explora métodos numéricos para resolver
-ecuaciones diferenciales mediante implementaciones
-computacionales y visualizaciones interactivas.
+Este proyecto explora la resolución numérica de ecuaciones diferenciales mediante implementaciones en Python y visualizaciones interactivas.
 
-El objetivo es estudiar cómo evolucionan las soluciones
-y cómo influyen las decisiones de discretización.
+Se estudian tres problemas: la difusión de calor, el transporte lineal y un oscilador masa-resorte no lineal, utilizando métodos como Euler explícito, Euler implícito, upwind y Runge-Kutta de cuarto orden.
+
+Las simulaciones permiten analizar la evolución de las soluciones, comparar aproximaciones numéricas y observar fenómenos relacionados con la estabilidad, la precisión y los efectos de la discretización.
+
 
 # Ecuación del calor
 
-::: {.simulacion-cientifica}
+## Planteamiento del problema
 
-::: {.simulacion-etiqueta}
-SIMULACIÓN 01 · ECUACIÓN DEL CALOR
-:::
-
-::: {.simulacion-titulo}
-Distribución inicial de temperatura
-:::
-
-::: {.simulacion-descripcion}
-La gráfica representa la distribución de temperatura al inicio de la simulación, antes de aplicar los métodos numéricos. Constituye el punto de partida para estudiar la evolución temporal del sistema.
-:::
-
-::: {.simulacion-grafico}
-
-```{python}
-import numpy as np
-import plotly.graph_objects as go
-
-# Dominio espacial y temporal
-x = np.arange(2, 6.05, 0.05)
-dt = 0.00125
-dx = 0.05
-
-# Condición inicial
-u0 = x + 2
-
-# Visualización de la condición inicial
-fig = go.Figure()
-
-fig.add_trace(
-    go.Scatter(
-        x=x,
-        y=u0,
-        mode="lines",
-        name="Temperatura inicial"
-    )
-)
-
-fig.update_layout(
-    xaxis_title="Posición x",
-    yaxis_title="Temperatura u(x,0)",
-    template="plotly_white",
-    height=380,
-    margin=dict(l=50, r=30, t=20, b=50)
-)
-
-
-fig.show(config={"displayModeBar": False})
-
-```
-
-:::
-
-::: {.simulacion-resultado}
-
-#### Interpretación
-
-La temperatura inicial está definida por $$u(x,0)=x+2$$. Por tanto, aumenta linealmente desde $$u(2,0)=4$$ hasta $$u(6,0)=8$$.
-
-:::
-
-:::
-
-Consideramos el problema:
-
+Consideramos la ecuación del calor unidimensional:
 
 ::: {.modelo-matematico}
 
@@ -199,6 +142,83 @@ $$
 
 :::
 
+::: {.simulacion-cientifica}
+
+::: {.simulacion-etiqueta}
+SIMULACIÓN 01 · ECUACIÓN DEL CALOR
+:::
+
+::: {.simulacion-titulo}
+Distribución inicial de temperatura
+:::
+
+::: {.simulacion-descripcion}
+La gráfica representa la distribución de temperatura al inicio de la simulación, antes de aplicar los métodos numéricos. Constituye el punto de partida para estudiar la evolución temporal del sistema.
+:::
+
+::: {.simulacion-grafico}
+
+```{python}
+import numpy as np
+import plotly.graph_objects as go
+
+# Dominio espacial y temporal
+x = np.arange(2, 6.05, 0.05)
+dt = 0.00125
+dx = 0.05
+
+# Condición inicial
+u0 = x + 2
+
+# Visualización de la condición inicial
+fig = go.Figure()
+
+fig.add_trace(
+    go.Scatter(
+        x=x,
+        y=u0,
+        mode="lines",
+        name="Temperatura inicial",
+        line=dict(color="#008FAD", width=3),
+    )
+)
+
+fig.update_layout(
+    xaxis_title="Posición x",
+    yaxis_title="Temperatura u(x,0)",
+    template="plotly_white",
+    width=580,
+    height=380,
+    autosize=False,
+)
+
+
+from IPython.display import HTML, display
+
+display(
+    HTML(
+        fig.to_html(
+            full_html=False,
+            include_plotlyjs="cdn",
+            include_mathjax=False,
+            config={"displayModeBar": False},
+        )
+    )
+)
+
+```
+
+:::
+
+::: {.simulacion-resultado}
+
+**Interpretación**
+
+La temperatura inicial está definida por $$u(x,0)=x+2$$. Por tanto, aumenta linealmente desde $$u(2,0)=4$$ hasta $$u(6,0)=8$$.
+
+:::
+
+:::
 
 ## Métodos numéricos
 
@@ -218,7 +238,7 @@ u_i^n
 \Delta t(x_i^2+3),
 $$
 
-donde $\lambda=\Delta t/(\Delta x)^2=0.5$.
+donde $$\lambda=\Delta t/(\Delta x)^2=0.5$$.
 
 ::: {.simulacion-cientifica}
 
@@ -239,9 +259,6 @@ Utiliza el control deslizante o el botón de reproducción para explorar la evol
 ::: {.simulacion-grafico}
 
 ```{python}
-import numpy as np
-import plotly.graph_objects as go
-
 # Parámetros del problema
 dx = 0.05
 dt = 0.00125
@@ -262,9 +279,7 @@ for n in range(nt):
     u_nueva = u.copy()
 
     u_nueva[1:-1] = (
-        u[1:-1]
-        + lam * (u[:-2] - 2*u[1:-1] + u[2:])
-        + dt * (x[1:-1]**2 + 3)
+        u[1:-1] + lam * (u[:-2] - 2 * u[1:-1] + u[2:]) + dt * (x[1:-1] ** 2 + 3)
     )
 
     # Condiciones de frontera
@@ -277,74 +292,116 @@ for n in range(nt):
 # Seleccionamos instantes para la animación
 indices = list(range(0, nt + 1, 10))
 
+
 fig = go.Figure()
 
-fig.add_trace(go.Scatter(
-    x=x,
-    y=soluciones[0],
-    mode="lines",
-    name="Temperatura",
-    line=dict(width=3)
-))
+# Condición inicial: referencia estática punteada
+fig.add_trace(
+    go.Scatter(
+        x=x,
+        y=soluciones[0],
+        mode="lines",
+        name="Condición inicial",
+        line=dict(color="#94A3B8", width=2, dash="dash"),
+    )
+)
 
-# Cada frame representa un instante
+# Solución de Euler explícito: curva animada
+fig.add_trace(
+    go.Scatter(
+        x=x,
+        y=soluciones[0],
+        mode="lines",
+        name="Euler explícito",
+        line=dict(color="#008FAD", width=3),
+    )
+)
+
+
+# Cada frame representa un instante y
+# cada frame actualiza solamente la solución numérica
 frames = []
 
 for n in indices:
-    frames.append(go.Frame(
-        data=[go.Scatter(
-            x=x,
-            y=soluciones[n],
-            mode="lines"
-        )],
-        name=str(n)
-    ))
+    frames.append(
+        go.Frame(
+            data=[
+                go.Scatter(
+                    x=x,
+                    y=soluciones[n],
+                    mode="lines",
+                    line=dict(color="#008FAD", width=3),
+                )
+            ],
+            traces=[1],
+            name=str(n),
+        )
+    )
 
 fig.frames = frames
 
+
 # Control deslizante
-sliders = [{
-    "active": 0,
-    "currentvalue": {"prefix": "Tiempo t = "},
-    "steps": [
-        {
-            "label": f"{n*dt:.3f}",
-            "method": "animate",
-            "args": [
-                [str(n)],
-                {
-                    "mode": "immediate",
-                    "frame": {"duration": 0, "redraw": True},
-                    "transition": {"duration": 0}
-                }
-            ]
-        }
-        for n in indices
-    ]
-}]
+sliders = [
+    {
+        "active": 0,
+        "currentvalue": {"prefix": "Tiempo t = "},
+        "steps": [
+            {
+                "label": f"{n * dt:.3f}",
+                "method": "animate",
+                "args": [
+                    [str(n)],
+                    {
+                        "mode": "immediate",
+                        "frame": {"duration": 0, "redraw": True},
+                        "transition": {"duration": 0},
+                    },
+                ],
+            }
+            for n in indices
+        ],
+    }
+]
 
 fig.update_layout(
     title="Evolución de la temperatura — Euler explícito",
     xaxis_title="Posición x",
     yaxis_title="Temperatura u(x,t)",
     xaxis=dict(range=[2, 6]),
-    yaxis=dict(range=[
-        min(np.min(s) for s in soluciones) - 1,
-        max(np.max(s) for s in soluciones) + 1
-    ]),
+    yaxis=dict(
+        range=[
+            min(np.min(s) for s in soluciones) - 1,
+            max(np.max(s) for s in soluciones) + 1,
+        ]
+    ),
     template="plotly_white",
     sliders=sliders,
-    height=550
+    width=580,
+    height=420,
+    margin=dict(l=60, r=35, t=50, b=100),
+    autosize=False,
 )
 
-fig.show()
+from IPython.display import HTML, display
+
+display(
+    HTML(
+        fig.to_html(
+            full_html=False,
+            include_plotlyjs="cdn",
+            include_mathjax=False,
+            config={"displayModeBar": False},
+        )
+    )
+)
 ```
 
 :::
 
 ::: {.simulacion-resultado}
 
-#### Interpretación
+**Interpretación**
 
 La distribución de temperatura evoluciona debido a la difusión térmica y al término fuente $$x^2+3$$.
 
@@ -364,7 +421,9 @@ se cumple la condición de estabilidad habitual del esquema explícito para la e
 
 ## Euler implícito: evolución de la temperatura
 
-A diferencia de Euler explícito, este método calcula la temperatura del siguiente instante resolviendo un sistema lineal:
+
+A diferencia de Euler explícito, el esquema implícito utiliza los valores de temperatura del nuevo instante temporal, que todavía son desconocidos. Por ello, las ecuaciones de los puntos interiores quedan acopladas y es necesario resolver un sistema lineal en cada paso:
+
 
 $$
 -\lambda u_{i-1}^{n+1}
@@ -388,9 +447,9 @@ Evolución temporal mediante Euler implícito
 ::: {.simulacion-descripcion}
 Esta simulación muestra la evolución de la distribución de temperatura mediante el esquema de Euler implícito con diferencias finitas.
 
-En cada paso temporal se resuelve un sistema de ecuaciones lineales para obtener la distribución de temperatura del instante siguiente.
 
-El método es incondicionalmente estable para la ecuación del calor lineal considerada, aunque su precisión sigue dependiendo de los pasos espacial y temporal.
+El esquema de Euler implícito es incondicionalmente estable para la discretización de difusión considerada: no requiere imponer una restricción sobre $\lambda=\Delta t/(\Delta x)^2$ para garantizar la estabilidad. Sin embargo, la precisión de la aproximación continúa dependiendo de los pasos espacial y temporal.
+
 :::
 
 ::: {.simulacion-grafico}
@@ -406,7 +465,7 @@ m = len(x) - 2
 # Matriz tridiagonal en formato de bandas
 ab = np.zeros((3, m))
 ab[0, 1:] = -lam
-ab[1, :] = 1 + 2*lam
+ab[1, :] = 1 + 2 * lam
 ab[2, :-1] = -lam
 
 # Condición inicial
@@ -415,7 +474,7 @@ soluciones_imp = [u_imp.copy()]
 
 # Euler implícito
 for n in range(nt):
-    b = u_imp[1:-1] + dt * (x[1:-1]**2 + 3)
+    b = u_imp[1:-1] + dt * (x[1:-1] ** 2 + 3)
 
     # Incorporamos las condiciones de frontera
     b[0] += lam * 4
@@ -428,54 +487,86 @@ for n in range(nt):
     soluciones_imp.append(u_imp.copy())
 
 # Gráfico interactivo
+
 fig_imp = go.Figure()
 
-fig_imp.add_trace(go.Scatter(
-    x=x,
-    y=soluciones_imp[0],
-    mode="lines",
-    name="Euler implícito",
-    line=dict(color="#E67E22", width=3)
-))
+# Condición inicial: referencia estática
+fig_imp.add_trace(
+    go.Scatter(
+        x=x,
+        y=soluciones_imp[0],
+        mode="lines",
+        name="Condición inicial",
+        line=dict(color="#94A3B8", width=2, dash="dash"),
+    )
+)
+
+# Euler implícito: solución animada
+fig_imp.add_trace(
+    go.Scatter(
+        x=x,
+        y=soluciones_imp[0],
+        mode="lines",
+        name="Euler implícito",
+        line=dict(color="#F26B5B", width=3),
+    )
+)
+
 
 fig_imp.frames = [
     go.Frame(
-        data=[go.Scatter(x=x, y=soluciones_imp[n], mode="lines")],
-        name=str(n)
+        data=[
+            go.Scatter(
+                x=x,
+                y=soluciones_imp[n],
+                mode="lines",
+                line=dict(color="#F26B5B", width=3),
+            )
+        ],
+        traces=[1],
+        name=str(n),
     )
     for n in indices
 ]
+
 
 fig_imp.update_layout(
     title="Evolución de la temperatura — Euler implícito",
     xaxis_title="Posición x",
     yaxis_title="Temperatura u(x,t)",
     xaxis=dict(range=[2, 6]),
-    yaxis=dict(range=[
-        min(np.min(s) for s in soluciones_imp) - 1,
-        max(np.max(s) for s in soluciones_imp) + 1
-    ]),
-    template="plotly_white",
-    height=550,
-    sliders=[{
-        "active": 0,
-        "currentvalue": {"prefix": "Tiempo t = "},
-        "steps": [
-            {
-                "label": f"{n*dt:.3f}",
-                "method": "animate",
-                "args": [
-                    [str(n)],
-                    {
-                        "mode": "immediate",
-                        "frame": {"duration": 0, "redraw": True},
-                        "transition": {"duration": 0}
-                    }
-                ]
-            }
-            for n in indices
+    yaxis=dict(
+        range=[
+            min(np.min(s) for s in soluciones_imp) - 1,
+            max(np.max(s) for s in soluciones_imp) + 1,
         ]
-    }]
+    ),
+    template="plotly_white",
+    width=580,
+    height=420,
+    margin=dict(l=60, r=35, t=50, b=100),
+    autosize=False,
+    sliders=[
+        {
+            "active": 0,
+            "currentvalue": {"prefix": "Tiempo t = "},
+            "steps": [
+                {
+                    "label": f"{n * dt:.3f}",
+                    "method": "animate",
+                    "args": [
+                        [str(n)],
+                        {
+                            "mode": "immediate",
+                            "frame": {"duration": 0, "redraw": True},
+                            "transition": {"duration": 0},
+                        },
+                    ],
+                }
+                for n in indices
+            ],
+        }
+    ],
 )
 
 fig_imp.show(config={"displayModeBar": False})
@@ -486,7 +577,7 @@ fig_imp.show(config={"displayModeBar": False})
 
 ::: {.simulacion-resultado}
 
-#### Interpretación
+**Interpretación**
 
 El método de Euler implícito calcula la distribución de temperatura del siguiente instante resolviendo un sistema lineal.
 
@@ -534,63 +625,71 @@ La visualización permite observar las diferencias entre ambos métodos a lo lar
 
 fig_comp = go.Figure()
 
-fig_comp.add_trace(go.Scatter(
-    x=x,
-    y=soluciones[0],
-    mode="lines",
-    name="Euler explícito",
-    line=dict(color="#2563EB", width=3)
-))
+fig_comp.add_trace(
+    go.Scatter(
+        x=x,
+        y=soluciones[0],
+        mode="lines",
+        name="Euler explícito",
+        line=dict(color="#008FAD", width=3),
+    )
+)
 
-fig_comp.add_trace(go.Scatter(
-    x=x,
-    y=soluciones_imp[0],
-    mode="lines",
-    name="Euler implícito",
-    line=dict(color="#E67E22", width=3, dash="dash")
-))
+fig_comp.add_trace(
+    go.Scatter(
+        x=x,
+        y=soluciones_imp[0],
+        mode="lines",
+        name="Euler implícito",
+        line=dict(color="#F26B5B", width=3, dash="dash"),
+    )
+)
 
 # Escala vertical fija para facilitar la comparación
-y_min = min(
-    np.min(s) for s in soluciones + soluciones_imp
-) - 1
+y_min = min(np.min(s) for s in soluciones + soluciones_imp) - 1
 
-y_max = max(
-    np.max(s) for s in soluciones + soluciones_imp
-) + 1
+y_max = max(np.max(s) for s in soluciones + soluciones_imp) + 1
 
 # Fotogramas con ambas soluciones
+
 fig_comp.frames = [
     go.Frame(
         data=[
-            go.Scatter(x=x, y=soluciones[n]),
-            go.Scatter(x=x, y=soluciones_imp[n])
+            go.Scatter(x=x, y=soluciones[n], line=dict(color="#008FAD", width=3)),
+            go.Scatter(
+                x=x,
+                y=soluciones_imp[n],
+                line=dict(color="#F26B5B", width=3, dash="dash"),
+            ),
         ],
-        name=str(n)
+        traces=[0, 1],
+        name=str(n),
     )
     for n in indices
 ]
 
 # Control deslizante compartido
-slider_comp = [{
-    "active": 0,
-    "currentvalue": {"prefix": "Tiempo t = "},
-    "steps": [
-        {
-            "label": f"{n*dt:.3f}",
-            "method": "animate",
-            "args": [
-                [str(n)],
-                {
-                    "mode": "immediate",
-                    "frame": {"duration": 0, "redraw": True},
-                    "transition": {"duration": 0}
-                }
-            ]
-        }
-        for n in indices
-    ]
-}]
+slider_comp = [
+    {
+        "active": 0,
+        "currentvalue": {"prefix": "Tiempo t = "},
+        "steps": [
+            {
+                "label": f"{n * dt:.3f}",
+                "method": "animate",
+                "args": [
+                    [str(n)],
+                    {
+                        "mode": "immediate",
+                        "frame": {"duration": 0, "redraw": True},
+                        "transition": {"duration": 0},
+                    },
+                ],
+            }
+            for n in indices
+        ],
+    }
+]
 
 fig_comp.update_layout(
     title="Comparación de métodos — Ecuación del calor",
@@ -599,13 +698,12 @@ fig_comp.update_layout(
     xaxis=dict(range=[2, 6]),
     yaxis=dict(range=[y_min, y_max]),
     template="plotly_white",
-    height=550,
+    width=580,
+    height=420,
+    autosize=False,
     sliders=slider_comp,
-    legend=dict(
-        orientation="h",
-        y=1.12,
-        x=0
-    )
+    legend=dict(orientation="h", x=0.5, xanchor="center", y=1.02, yanchor="bottom"),
+    margin=dict(l=65, r=20, t=100, b=100),
 )
 
 fig_comp.show(config={"displayModeBar": False})
@@ -615,22 +713,13 @@ fig_comp.show(config={"displayModeBar": False})
 
 ::: {.simulacion-resultado}
 
-#### Interpretación de resultados
+**Interpretación de resultados**
 
-Ambos métodos aproximan la evolución de temperatura del mismo problema, utilizando los mismos pasos espacial y temporal.
+Ambos métodos aproximan la evolución de la temperatura utilizando los mismos pasos espacial y temporal.
 
-La máxima diferencia absoluta observada entre las soluciones numéricas fue:
+Las curvas presentan un comportamiento muy similar durante la simulación, aunque se observan pequeñas discrepancias entre las aproximaciones.
 
-$$
-\max_{i,n}|u_{\mathrm{exp}}(x_i,t_n)-u_{\mathrm{imp}}(x_i,t_n)|
-\approx 0.01306.
-$$
-
-Esta diferencia máxima se registró en $x=5.95$, en el instante $t=0.00125$.
-
-Al finalizar la simulación, en $t=0.5$, la diferencia máxima espacial fue aproximadamente $0.01107$.
-
-**Importante:** estas cantidades miden la discrepancia entre dos aproximaciones numéricas. No representan el error respecto de una solución exacta.
+Estas diferencias se cuantifican en los apartados siguientes. Su magnitud no representa necesariamente el error respecto de la solución exacta, sino la discrepancia entre ambos métodos numéricos.
 
 :::
 
@@ -644,7 +733,6 @@ $$
 D(x_i,t_n)=\left|u_{\mathrm{exp}}(x_i,t_n)-u_{\mathrm{imp}}(x_i,t_n)\right|.
 $$
 
-Esta cantidad mide la discrepancia entre los dos métodos, pero no representa necesariamente el error respecto de la solución exacta.
 
 ::: {.simulacion-cientifica}
 
@@ -666,28 +754,23 @@ Utiliza el control deslizante para identificar las regiones donde ambos métodos
 
 ```{python}
 # Diferencia absoluta entre Euler explícito e implícito
-diferencias = [
-    np.abs(soluciones[n] - soluciones_imp[n])
-    for n in range(nt + 1)
-]
+diferencias = [np.abs(soluciones[n] - soluciones_imp[n]) for n in range(nt + 1)]
 
 fig_dif = go.Figure()
 
-fig_dif.add_trace(go.Scatter(
-    x=x,
-    y=diferencias[0],
-    mode="lines",
-    name="Diferencia absoluta",
-    line=dict(color="#9333EA", width=3),
-    fill="tozeroy"
-))
+fig_dif.add_trace(
+    go.Scatter(
+        x=x,
+        y=diferencias[0],
+        mode="lines",
+        name="Diferencia absoluta",
+        line=dict(color="#9333EA", width=3),
+        fill="tozeroy",
+    )
+)
 
 fig_dif.frames = [
-    go.Frame(
-        data=[go.Scatter(x=x, y=diferencias[n])],
-        name=str(n)
-    )
-    for n in indices
+    go.Frame(data=[go.Scatter(x=x, y=diferencias[n])], name=str(n)) for n in indices
 ]
 
 fig_dif.update_layout(
@@ -695,31 +778,33 @@ fig_dif.update_layout(
     xaxis_title="Posición x",
     yaxis_title="Diferencia absoluta",
     xaxis=dict(range=[2, 6]),
-    yaxis=dict(range=[
-        0,
-        max(np.max(d) for d in diferencias) * 1.1
-    ]),
+    yaxis=dict(range=[0, max(np.max(d) for d in diferencias) * 1.1]),
     template="plotly_white",
-    height=550,
-    sliders=[{
-        "active": 0,
-        "currentvalue": {"prefix": "Tiempo t = "},
-        "steps": [
-            {
-                "label": f"{n*dt:.3f}",
-                "method": "animate",
-                "args": [
-                    [str(n)],
-                    {
-                        "mode": "immediate",
-                        "frame": {"duration": 0, "redraw": True},
-                        "transition": {"duration": 0}
-                    }
-                ]
-            }
-            for n in indices
-        ]
-    }]
+    width=580,
+    height=420,
+    margin=dict(l=60, r=35, t=50, b=100),
+    autosize=False,
+    sliders=[
+        {
+            "active": 0,
+            "currentvalue": {"prefix": "Tiempo t = "},
+            "steps": [
+                {
+                    "label": f"{n * dt:.3f}",
+                    "method": "animate",
+                    "args": [
+                        [str(n)],
+                        {
+                            "mode": "immediate",
+                            "frame": {"duration": 0, "redraw": True},
+                            "transition": {"duration": 0},
+                        },
+                    ],
+                }
+                for n in indices
+            ],
+        }
+    ],
 )
 
 fig_dif.show(config={"displayModeBar": False})
@@ -729,19 +814,15 @@ fig_dif.show(config={"displayModeBar": False})
 
 ::: {.simulacion-resultado}
 
-#### Interpretación
 
-La diferencia absoluta permite cuantificar la discrepancia entre los dos esquemas numéricos:
+**Interpretación**
 
-$$
-D(x_i,t_n)=
-\left|u_{\mathrm{exp}}(x_i,t_n)
--u_{\mathrm{imp}}(x_i,t_n)\right|.
-$$
+La diferencia entre las aproximaciones no es uniforme en el espacio ni permanece constante durante la evolución temporal.
 
-La discrepancia no es uniforme en el espacio ni permanece constante durante la evolución temporal.
+La animación permite observar cómo cambia esta discrepancia a lo largo del dominio y localizar las regiones donde ambos métodos presentan mayores diferencias.
 
-Este análisis permite comparar el comportamiento de ambos métodos, pero no determina por sí solo cuál de las dos aproximaciones es más precisa respecto de la solución exacta.
+Sin embargo, una diferencia pequeña entre los métodos no garantiza que ambos sean igualmente precisos respecto de la solución exacta.
+
 
 :::
 
@@ -758,33 +839,255 @@ $$
 
 ```{python}
 # Diferencia máxima en cada instante
-diferencia_maxima = np.array([
-    np.max(d) for d in diferencias
-])
+diferencia_maxima = np.array([np.max(d) for d in diferencias])
 
 # Instante y posición de la mayor discrepancia global
 n_max, i_max = np.unravel_index(
-    np.argmax(np.abs(
-        np.array(soluciones) - np.array(soluciones_imp)
-    )),
-    (nt + 1, len(x))
+    np.argmax(np.abs(np.array(soluciones) - np.array(soluciones_imp))), (nt + 1, len(x))
 )
 
-print(f"Diferencia máxima global: {diferencia_maxima.max():.8f}")
-print(f"Instante: t = {n_max * dt:.5f}")
-print(f"Posición: x = {x[i_max]:.2f}")
-print(f"Diferencia máxima en t=0.5: {diferencia_maxima[-1]:.8f}")
 ```
 
-### Interpretación de los resultados
 
-La comparación entre los métodos de Euler explícito e implícito muestra una **diferencia máxima absoluta de 0.01306024**, alcanzada en el instante $t=0.00125$ y en la posición $x=5.95$, próxima a la frontera derecha del dominio.
+```{python}
+#| echo: false
 
-Esta discrepancia temprana puede relacionarse con el término fuente $x^2+3$, cuyo efecto aumenta hacia la derecha, mientras que la condición de frontera $u(6,t)=8$ mantiene fija la temperatura en ese extremo.
+from IPython.display import HTML, display
 
-Al finalizar la simulación, en $t=0.5$, la diferencia máxima disminuye a **0.01106772**, lo que indica una concordancia cercana entre ambas aproximaciones para los parámetros utilizados.
+display(
+    HTML(f"""
+<div class="indicadores-numericos">
 
-Es importante señalar que estas diferencias representan la **discrepancia entre dos métodos numéricos**, y no necesariamente el error respecto de la solución exacta.
+  <div class="indicador">
+    <div class="indicador-etiqueta">DIFERENCIA MÁXIMA GLOBAL</div>
+    <div class="indicador-valor">{diferencia_maxima.max():.8f}</div>
+  </div>
+
+  <div class="indicador">
+    <div class="indicador-etiqueta">INSTANTE DE MÁXIMA DIFERENCIA</div>
+    <div class="indicador-valor">{n_max * dt:.5f}</div>
+  </div>
+
+  <div class="indicador">
+    <div class="indicador-etiqueta">POSICIÓN ESPACIAL</div>
+    <div class="indicador-valor">{x[i_max]:.2f}</div>
+  </div>
+
+  <div class="indicador">
+    <div class="indicador-etiqueta">DIFERENCIA MÁXIMA EN t = 0.5</div>
+    <div class="indicador-valor">{diferencia_maxima[-1]:.8f}</div>
+  </div>
+
+</div>
+""")
+)
+```
+
+
+::: {.simulacion-resultado}
+
+**Interpretación de los resultados**
+
+La mayor discrepancia entre Euler explícito e implícito se alcanza en $t=0.00125$, en la posición $x=5.95$, próxima a la frontera derecha del dominio.
+
+La ubicación de esta diferencia resulta relevante porque el término fuente $x^2+3$ aumenta con la posición, mientras que la condición de frontera mantiene fija la temperatura en $x=6$. Sin embargo, estos antecedentes no bastan por sí solos para establecer la causa de la discrepancia.
+
+Al finalizar la simulación, la diferencia máxima espacial es menor que la máxima global registrada durante la evolución. En conjunto, los resultados muestran una concordancia cercana entre las dos aproximaciones para la discretización utilizada.
+
+Esta comparación permite cuantificar la discrepancia entre ambos métodos, pero no determinar cuál presenta menor error respecto de la solución exacta.
+
+:::
+
+## Experimento numérico: estabilidad de los métodos explícito e implícito
+
+
+::: {.simulacion-cientifica}
+
+::: {.simulacion-etiqueta}
+EXPERIMENTO INTERACTIVO 01 · ECUACIÓN DEL CALOR
+:::
+
+
+Para la ecuación del calor unidimensional, consideramos el parámetro de difusión:
+
+$$
+r=\frac{\alpha\Delta t}{(\Delta x)^2}.
+$$
+
+El esquema explícito con diferencias centrales satisface la condición de estabilidad $0\leq r\leq 0.5$. En cambio, el esquema implícito de Euler hacia atrás es incondicionalmente estable para este problema lineal.
+
+Modifica $r$ y compara las soluciones obtenidas después de 30 pasos temporales.
+
+```{ojs}
+//| echo: false
+
+viewof rCalor = Inputs.range([0.05, 1.2], {
+  value: 0.4,
+  step: 0.05,
+  label: "Número de difusión (r)"
+})
+```
+
+```{ojs}
+//| echo: false
+
+solucionesCalor = {
+  const N = 61;
+  const pasos = 30;
+
+  // Perfil inicial: pulso triangular
+  const inicial = Array.from({length: N}, (_, j) =>
+    Math.max(0, 1 - Math.abs(j - 30) / 12)
+  );
+
+  // Euler explícito
+  let explicito = [...inicial];
+
+  for (let n = 0; n < pasos; n++) {
+    const siguiente = new Array(N).fill(0);
+
+    for (let j = 1; j < N - 1; j++) {
+      siguiente[j] = explicito[j] +
+        rCalor * (explicito[j+1] - 2*explicito[j] + explicito[j-1]);
+    }
+
+    explicito = siguiente;
+  }
+
+  // Euler implícito: sistema tridiagonal
+  let implicito = [...inicial];
+  const m = N - 2;
+
+  for (let n = 0; n < pasos; n++) {
+    const a = new Array(m).fill(-rCalor);
+    const b = new Array(m).fill(1 + 2*rCalor);
+    const c = new Array(m).fill(-rCalor);
+    const d = implicito.slice(1, N-1);
+
+    // Algoritmo de Thomas
+    for (let j = 1; j < m; j++) {
+      const factor = a[j] / b[j-1];
+      b[j] -= factor * c[j-1];
+      d[j] -= factor * d[j-1];
+    }
+
+    const x = new Array(m);
+    x[m-1] = d[m-1] / b[m-1];
+
+    for (let j = m-2; j >= 0; j--) {
+      x[j] = (d[j] - c[j]*x[j+1]) / b[j];
+    }
+
+    implicito = [0, ...x, 0];
+  }
+
+  return {inicial, explicito, implicito};
+}
+```
+
+```{ojs}
+//| echo: false
+
+graficoCalor = {
+  const Plotly = await require("https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.3/plotly.min.js");
+
+  const contenedor = document.createElement("div");
+  contenedor.style.width = "100%";
+
+  const x = Array.from({length: solucionesCalor.inicial.length}, (_, j) => j);
+
+  await Plotly.newPlot(contenedor, [
+    {
+      x: x,
+      y: solucionesCalor.inicial,
+      type: "scatter",
+      mode: "lines",
+      name: "Condición inicial",
+      line: {color:"#94a3b8", width:2, dash:"dash"}
+    },
+    {
+      x: x,
+      y: solucionesCalor.explicito,
+      type: "scatter",
+      mode: "lines",
+      name: "Euler explícito",
+      line: {color:"#008FAD", width:2.5}
+    },
+    {
+      x: x,
+      y: solucionesCalor.implicito,
+      type: "scatter",
+      mode: "lines",
+      name: "Euler implícito",
+      line: {color:"#F26B5B", width:2.5}
+    }
+  ], {
+    title: {
+      text: `Ecuación del calor — r = ${rCalor.toFixed(2)}`
+    },
+    xaxis: {title:"Posición espacial (índice j)"},
+    yaxis: {title:"Temperatura"},
+    height:420,
+    margin:{t:65,r:30,b:65,l:70},
+    paper_bgcolor:"white",
+    plot_bgcolor:"white",
+    legend:{orientation:"h", y:-0.25}
+  }, {
+    responsive:true,
+    displayModeBar:false
+  });
+
+  return contenedor;
+}
+```
+
+```{ojs}
+//| echo: false
+
+indicadorCalor = {
+  const maximo = Math.max(
+    ...solucionesCalor.explicito.map(v => Math.abs(v))
+  );
+
+  const formato = maximo >= 10000
+    ? maximo.toExponential(2)
+    : maximo.toFixed(4);
+
+  const div = document.createElement("div");
+
+  div.style.textAlign = "center";
+  div.style.margin = "12px 0 25px";
+  div.style.fontSize = "16px";
+  div.style.color = rCalor > 0.5 ? "#F26B5B" : "#94a3b8";
+
+  div.innerHTML =
+    `<strong>Amplitud máxima absoluta (Euler explícito):</strong> ${formato}`;
+
+  return div;
+}
+```
+
+
+:::
+
+
+### ¿Por qué Euler explícito pierde estabilidad cuando $r>0.5$?
+
+El esquema de Euler explícito para la ecuación del calor puede escribirse como:
+
+$$
+u_j^{n+1}=r\,u_{j-1}^{n}+(1-2r)\,u_j^{n}+r\,u_{j+1}^{n}.
+$$
+
+Cuando $0\leq r\leq0.5$, los tres coeficientes son no negativos y suman 1. Por lo tanto, cada nuevo valor es una **combinación convexa** de las temperaturas del paso anterior, lo que evita la aparición de nuevos máximos o mínimos.
+
+En cambio, cuando $r>0.5$, el coeficiente central $(1-2r)$ se vuelve negativo. El esquema pierde esta propiedad y ciertas perturbaciones pueden amplificarse en los pasos sucesivos, generando oscilaciones artificiales.
+
+**Euler implícito**, por su parte, mantiene la estabilidad para este problema lineal de difusión, incluso cuando $r>0.5$.
+
+El indicador de amplitud máxima permite observar cómo crece la inestabilidad del método explícito, aunque la escala automática del gráfico dificulte apreciar ese crecimiento.
+
+*Nota:* en este experimento se utilizan una condición inicial triangular y condiciones de frontera homogéneas, sin término fuente, para estudiar específicamente la estabilidad de ambos métodos. Al variar $r$ con 30 pasos fijos, también cambia el tiempo físico simulado.
 
 # Ecuación de transporte
 
@@ -817,18 +1120,42 @@ $$
 ::: {.condiciones-problema}
 
 ::: {.condiciones-titulo}
-CONDICIÓN INICIAL Y DOMINIO
+CONDICIONES INICIALES, DE FRONTERA Y DOMINIO
 :::
 
-**Condición inicial a un pulso rectangular**
+**Condición inicial: pulso rectangular**
+
+```{=html}
+<div style="display:flex; justify-content:center; align-items:center; gap:12px; margin:22px auto; border:none; background:transparent;">
+
+  <div style="font-family:'KaTeX_Main',serif; font-size:21px; color:#243047; white-space:nowrap;">
+    <span style="font-family:'KaTeX_Math',serif; font-style:italic;">h</span>(<span style="font-family:'KaTeX_Math',serif; font-style:italic;">x</span>,0) =
+  </div>
+
+  <div style="font-family:'KaTeX_Size4','KaTeX_Main',serif; font-size:39px; line-height:1; font-style:normal; color:#243047; transform:scaleY(0.65); transform-origin:center;">{</div>
+
+  <div style="display:flex; flex-direction:column; gap:9px; font-family:'KaTeX_Main',serif; font-size:21px; line-height:1.3; color:#243047;">
+
+    <div style="display:flex; align-items:center; gap:24px;">
+      <span>1</span>
+      <span>si 2 ≤ <span style="font-family:'KaTeX_Math',serif; font-style:italic;">x</span> ≤ 4,</span>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:24px;">
+      <span>0</span>
+      <span>en otro caso.</span>
+    </div>
+
+  </div>
+</div>
+```
+
+**Condición de frontera de entrada**
 
 $$
-h(x,0)=
-\begin{cases}
-1 & \text{si } 2\leq x\leq 4,\\
-0 & \text{en otro caso}.
-\end{cases}
+h(0,t)=0,\qquad t\in[0,2].
 $$
+
 
 **Dominio**
 
@@ -839,7 +1166,9 @@ $$
 :::
 
 
-La solución representa un pulso que se desplaza hacia la derecha con velocidad constante $c$.
+
+La solución representa un pulso rectangular que se desplaza hacia la derecha con velocidad constante $c=1.5$, sin modificar su forma.
+
 
 ## Método upwind
 
@@ -867,7 +1196,7 @@ SIMULACIÓN 06 · ECUACIÓN DE TRANSPORTE
 :::
 
 ::: {.simulacion-titulo}
-Propagación de un pulso rectangular mediante upwind
+Propagación de un pulso rectangular con método upwind 
 :::
 
 ::: {.simulacion-descripcion}
@@ -881,9 +1210,6 @@ Utiliza el control deslizante para observar cómo se desplaza el pulso y cómo s
 ::: {.simulacion-grafico}
 
 ```{python}
-import numpy as np
-import plotly.graph_objects as go
-
 # Parámetros
 c = 1.5
 dx_trans = 0.1
@@ -896,11 +1222,7 @@ nt_trans = int(round(T_trans / dt_trans))
 lambda_trans = c * dt_trans / dx_trans
 
 # Pulso rectangular inicial
-h = np.where(
-    (x_trans >= 2) & (x_trans <= 4),
-    1.0,
-    0.0
-)
+h = np.where((x_trans >= 2) & (x_trans <= 4), 1.0, 0.0)
 
 # Guardamos las soluciones
 soluciones_trans = [h.copy()]
@@ -909,10 +1231,7 @@ soluciones_trans = [h.copy()]
 for n in range(nt_trans):
     h_nueva = h.copy()
 
-    h_nueva[1:] = (
-        h[1:]
-        - lambda_trans * (h[1:] - h[:-1])
-    )
+    h_nueva[1:] = h[1:] - lambda_trans * (h[1:] - h[:-1])
 
     # Condición de entrada
     h_nueva[0] = 0.0
@@ -923,62 +1242,58 @@ for n in range(nt_trans):
 # Gráfico interactivo
 fig_trans = go.Figure()
 
-fig_trans.add_trace(go.Scatter(
-    x=x_trans,
-    y=soluciones_trans[0],
-    mode="lines",
-    name="Upwind",
-    line=dict(color="#2563EB", width=3)
-))
+fig_trans.add_trace(
+    go.Scatter(
+        x=x_trans,
+        y=soluciones_trans[0],
+        mode="lines",
+        name="Upwind",
+        line=dict(color="#008FAD", width=3),
+    )
+)
 
 # Animación
 fig_trans.frames = [
     go.Frame(
-        data=[
-            go.Scatter(
-                x=x_trans,
-                y=soluciones_trans[n],
-                mode="lines"
-            )
-        ],
-        name=str(n)
+        data=[go.Scatter(x=x_trans, y=soluciones_trans[n], mode="lines")], name=str(n)
     )
     for n in range(nt_trans + 1)
 ]
 
 # Control deslizante
-slider_trans = [{
-    "active": 0,
-    "currentvalue": {"prefix": "Tiempo t = "},
-    "steps": [
-        {
-            "label": f"{n*dt_trans:.2f}",
-            "method": "animate",
-            "args": [
-                [str(n)],
-                {
-                    "mode": "immediate",
-                    "frame": {
-                        "duration": 0,
-                        "redraw": True
+slider_trans = [
+    {
+        "active": 0,
+        "currentvalue": {"prefix": "Tiempo t = "},
+        "steps": [
+            {
+                "label": f"{n * dt_trans:.2f}",
+                "method": "animate",
+                "args": [
+                    [str(n)],
+                    {
+                        "mode": "immediate",
+                        "frame": {"duration": 0, "redraw": True},
+                        "transition": {"duration": 0},
                     },
-                    "transition": {"duration": 0}
-                }
-            ]
-        }
-        for n in range(nt_trans + 1)
-    ]
-}]
+                ],
+            }
+            for n in range(nt_trans + 1)
+        ],
+    }
+]
 
 fig_trans.update_layout(
-    title="Transporte de un pulso rectangular — Método upwind",
     xaxis_title="Posición x",
     yaxis_title="Altura h(x,t)",
     xaxis=dict(range=[0, 10]),
     yaxis=dict(range=[-0.1, 1.1]),
     template="plotly_white",
-    height=550,
-    sliders=slider_trans
+    width=580,
+    height=420,
+    margin=dict(l=60, r=35, t=50, b=100),
+    autosize=False,
+    sliders=slider_trans,
 )
 
 fig_trans.show(config={"displayModeBar": False})
@@ -989,27 +1304,29 @@ fig_trans.show(config={"displayModeBar": False})
 
 ::: {.simulacion-resultado}
 
-#### Interpretación
 
-El pulso se desplaza hacia la derecha, siguiendo la dirección de propagación establecida por la velocidad positiva:
+**Interpretación**
+
+El pulso se desplaza hacia la derecha, de acuerdo con la velocidad positiva de propagación:
 
 $$
 c=1.5.
 $$
 
-Aunque la solución exacta conserva la forma rectangular del pulso, el método upwind introduce **difusión numérica**, que suaviza los bordes discontinuos a medida que avanza el tiempo.
+Durante la evolución se observa que los bordes inicialmente abruptos del pulso se suavizan progresivamente. Este comportamiento es característico de la difusión numérica introducida por el esquema upwind de primer orden.
 
-El número de Courant es
+El número de Courant utilizado es
 
 $$
 \lambda=\frac{c\Delta t}{\Delta x}=0.75,
 $$
 
-por lo que se satisface la condición de estabilidad del esquema:
+por lo que se cumple la condición de estabilidad:
 
 $$
 0\leq\lambda\leq1.
 $$
+
 
 :::
 
@@ -1033,104 +1350,98 @@ SIMULACIÓN 07 · ECUACIÓN DE TRANSPORTE
 :::
 
 ::: {.simulacion-titulo}
-Comparación con la solución exacta
+Transporte: solución exacta vs. método upwind
 :::
+
 
 ::: {.simulacion-descripcion}
-La visualización compara la solución obtenida mediante el método upwind con la solución exacta del problema de transporte.
 
-La solución exacta conserva la forma rectangular del pulso mientras se desplaza hacia la derecha. En cambio, la aproximación numérica presenta un suavizado progresivo de sus bordes.
+Esta visualización compara, en cada instante, la solución exacta de la ecuación de transporte con la aproximación obtenida mediante el método upwind.
 
-Utiliza el control deslizante para observar cómo evoluciona esta diferencia.
+Utiliza el control deslizante para observar cómo evolucionan ambas soluciones y localizar las regiones donde presentan mayores discrepancias.
+
 :::
+
 
 ::: {.simulacion-grafico}
 
 ```{python}
 # Solución exacta del pulso rectangular
 def solucion_exacta(x, t):
-    return np.where(
-        (x - c*t >= 2) & (x - c*t <= 4),
-        1.0,
-        0.0
-    )
+    return np.where((x - c * t >= 2) & (x - c * t <= 4), 1.0, 0.0)
+
 
 fig_comparacion_trans = go.Figure()
 
 # Solución numérica
-fig_comparacion_trans.add_trace(go.Scatter(
-    x=x_trans,
-    y=soluciones_trans[0],
-    mode="lines",
-    name="Upwind",
-    line=dict(color="#2563EB", width=3)
-))
+fig_comparacion_trans.add_trace(
+    go.Scatter(
+        x=x_trans,
+        y=soluciones_trans[0],
+        mode="lines",
+        name="Upwind",
+        line=dict(color="#008FAD", width=3),
+    )
+)
 
 # Solución exacta
-fig_comparacion_trans.add_trace(go.Scatter(
-    x=x_trans,
-    y=solucion_exacta(x_trans, 0),
-    mode="lines",
-    name="Solución exacta",
-    line=dict(color="#E67E22", width=3, dash="dash")
-))
+fig_comparacion_trans.add_trace(
+    go.Scatter(
+        x=x_trans,
+        y=solucion_exacta(x_trans, 0),
+        mode="lines",
+        name="Solución exacta",
+        line=dict(color="#8193A8", width=3, dash="dash"),
+    )
+)
 
 # Animación de ambas soluciones
 fig_comparacion_trans.frames = [
     go.Frame(
         data=[
-            go.Scatter(
-                x=x_trans,
-                y=soluciones_trans[n]
-            ),
-            go.Scatter(
-                x=x_trans,
-                y=solucion_exacta(x_trans, n*dt_trans)
-            )
+            go.Scatter(x=x_trans, y=soluciones_trans[n]),
+            go.Scatter(x=x_trans, y=solucion_exacta(x_trans, n * dt_trans)),
         ],
-        name=str(n)
+        name=str(n),
     )
     for n in range(nt_trans + 1)
 ]
 
 # Control deslizante
-slider_comparacion_trans = [{
-    "active": 0,
-    "currentvalue": {"prefix": "Tiempo t = "},
-    "steps": [
-        {
-            "label": f"{n*dt_trans:.2f}",
-            "method": "animate",
-            "args": [
-                [str(n)],
-                {
-                    "mode": "immediate",
-                    "frame": {
-                        "duration": 0,
-                        "redraw": True
+slider_comparacion_trans = [
+    {
+        "active": 0,
+        "currentvalue": {"prefix": "Tiempo t = "},
+        "steps": [
+            {
+                "label": f"{n * dt_trans:.2f}",
+                "method": "animate",
+                "args": [
+                    [str(n)],
+                    {
+                        "mode": "immediate",
+                        "frame": {"duration": 0, "redraw": True},
+                        "transition": {"duration": 0},
                     },
-                    "transition": {"duration": 0}
-                }
-            ]
-        }
-        for n in range(nt_trans + 1)
-    ]
-}]
+                ],
+            }
+            for n in range(nt_trans + 1)
+        ],
+    }
+]
 
 fig_comparacion_trans.update_layout(
-    title="Transporte: solución exacta vs. método upwind",
     xaxis_title="Posición x",
     yaxis_title="Altura h(x,t)",
     xaxis=dict(range=[0, 10]),
     yaxis=dict(range=[-0.1, 1.1]),
     template="plotly_white",
-    height=550,
+    width=580,
+    height=420,
+    margin=dict(l=60, r=35, t=50, b=100),
+    autosize=False,
     sliders=slider_comparacion_trans,
-    legend=dict(
-        orientation="h",
-        y=1.12,
-        x=0
-    )
+    legend=dict(orientation="h", y=1.12, x=0),
 )
 
 fig_comparacion_trans.show(config={"displayModeBar": False})
@@ -1140,38 +1451,14 @@ fig_comparacion_trans.show(config={"displayModeBar": False})
 
 ::: {.simulacion-resultado}
 
-#### Interpretación de resultados
+**Interpretación de resultados**
 
-La solución exacta del problema de transporte conserva la forma del pulso inicial y únicamente modifica su posición:
+La comparación permite observar una diferencia fundamental entre ambas soluciones: mientras el pulso exacto mantiene sus bordes abruptos durante el desplazamiento, la aproximación numérica desarrolla transiciones progresivamente más suaves.
 
-$$
-h(x,t)=h_0(x-ct).
-$$
+Las mayores discrepancias visuales se concentran alrededor de los bordes del pulso, donde la solución exacta presenta discontinuidades.
 
-El método upwind introduce difusión numérica, que suaviza las discontinuidades del pulso.
+Este comportamiento permite identificar el efecto de la difusión numérica. En el apartado siguiente se cuantifica su impacto mediante el error absoluto máximo y el error discreto en norma $L^1$.
 
-Al finalizar la simulación, en \(t=2\), se obtuvieron los siguientes errores:
-
-**Error absoluto máximo**
-
-$$
-E_{\infty}
-=
-\max_i |h_i^{\mathrm{num}}-h_i^{\mathrm{exacta}}|
-\approx 0.439540.
-$$
-
-**Error discreto en norma \(L^1\)**
-
-$$
-E_1
-=
-\Delta x\sum_i
-|h_i^{\mathrm{num}}-h_i^{\mathrm{exacta}}|
-\approx 0.433093.
-$$
-
-Estos resultados muestran que, aunque el esquema satisface la condición de estabilidad, la aproximación presenta diferencias apreciables cerca de los bordes del pulso.
 
 :::
 
@@ -1207,28 +1494,164 @@ for n in range(nt_trans + 1):
     errores_trans.append(error)
 
 # Error máximo y error L1 discreto
-error_max_trans = np.array([
-    np.max(e) for e in errores_trans
-])
+error_max_trans = np.array([np.max(e) for e in errores_trans])
 
-error_l1_trans = np.array([
-    dx_trans * np.sum(e) for e in errores_trans
-])
+error_l1_trans = np.array([dx_trans * np.sum(e) for e in errores_trans])
 
-print(f"Error máximo en t=2: {error_max_trans[-1]:.6f}")
-print(f"Error L1 en t=2: {error_l1_trans[-1]:.6f}")
 ```
 
 
-### Interpretación de los resultados
+```{python}
+#| echo: false
 
-En el instante final $t=2$, el método *upwind* presenta un **error máximo de 0.439540** y un **error $L^1$ discreto de 0.433093** respecto de la solución exacta evaluada sobre la malla.
+from IPython.display import HTML, display
 
-La comparación gráfica muestra que, mientras la solución exacta conserva la forma rectangular del pulso, la aproximación numérica presenta bordes progresivamente suavizados. Este comportamiento corresponde al fenómeno de **difusión numérica**, característico del esquema *upwind* de primer orden.
+display(
+    HTML(f"""
+<div class="indicadores-numericos">
 
-Aunque el número CFL es $\lambda=0.75$, y satisface la condición de estabilidad $0\leq\lambda\leq1$, el método introduce errores de aproximación, particularmente cerca de las discontinuidades.
+  <div class="indicador">
+    <div class="indicador-etiqueta">ERROR MÁXIMO EN t = 2</div>
+    <div class="indicador-valor">{error_max_trans[-1]:.6f}</div>
+  </div>
 
-Por lo tanto, los resultados muestran que **la estabilidad de un esquema numérico no garantiza una representación precisa de todas las características de la solución**.
+  <div class="indicador">
+    <div class="indicador-etiqueta">ERROR L1 DISCRETO EN t = 2</div>
+    <div class="indicador-valor">{error_l1_trans[-1]:.6f}</div>
+  </div>
+
+</div>
+""")
+)
+```
+
+
+::: {.simulacion-resultado}
+
+**Interpretación de los resultados**
+
+En el instante final $t=2$, el método *upwind* presenta un **error máximo de 0.439540** y un **error $L^1$ discreto de 0.433093**, respecto de la solución exacta evaluada sobre la malla.
+
+Estos valores cuantifican las discrepancias observadas en los gráficos anteriores, especialmente cerca de las discontinuidades del pulso.
+
+Aunque el número de Courant $\lambda=0.75$ satisface la condición de estabilidad, el método presenta errores de aproximación apreciables.
+
+Por lo tanto, **la estabilidad numérica no garantiza por sí sola una aproximación precisa de la solución**.
+
+:::
+
+## Experimento numérico: estabilidad del método upwind
+
+
+::: {.simulacion-cientifica}
+
+::: {.simulacion-etiqueta}
+EXPERIMENTO INTERACTIVO 02 · ECUACIÓN DE TRANSPORTE
+:::
+
+
+En este experimento numérico se analiza la influencia del **número de Courant** $\lambda$ sobre la estabilidad del esquema *upwind* explícito.
+
+El deslizador permite modificar $\lambda$ y observar la solución obtenida después de 60 pasos temporales. Cada cambio del parámetro produce un nuevo cálculo numérico, lo que permite comparar el comportamiento del esquema dentro y fuera de la región de estabilidad.
+
+Para $0 \leq \lambda \leq 1$, se satisface la condición CFL, aunque puede observarse difusión numérica. Cuando $\lambda > 1$, el esquema pierde estabilidad y pueden aparecer oscilaciones y amplificaciones artificiales.
+
+**La estabilidad no garantiza precisión:** una solución puede permanecer acotada y, aun así, presentar diferencias importantes respecto de la solución exacta.
+
+*Nota:* al mantener fijo el número de pasos, modificar $\lambda$ también cambia el tiempo físico simulado.
+
+```{ojs}
+//| echo: false
+viewof lambda = Inputs.range([0, 1.5], {
+  value: 0.75,
+  step: 0.05,
+  label: "Número de Courant (λ)"
+})
+```
+
+```{ojs}
+//| echo: false
+md`Valor seleccionado: **λ = ${lambda.toFixed(2)}**`
+```
+
+```{ojs}
+//| echo: false
+
+solucion = {
+  const N = 120;
+  const pasos = 60;
+  let u = Array.from({length: N}, (_, j) =>
+    j >= 15 && j <= 45 ? 1 : 0
+  );
+
+  for (let n = 0; n < pasos; n++) {
+    const siguiente = new Array(N);
+    siguiente[0] = 0;
+
+    for (let j = 1; j < N; j++) {
+      siguiente[j] = u[j] - lambda * (u[j] - u[j - 1]);
+    }
+
+    u = siguiente;
+  }
+
+  return u;
+}
+
+grafico = {
+  const Plotly = await require("https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.3/plotly.min.js");
+
+  const contenedor = document.createElement("div");
+  contenedor.style.width = "100%";
+
+  const x = Array.from({length: solucion.length}, (_, j) => j);
+
+  await Plotly.newPlot(contenedor, [{
+    x: x,
+    y: solucion,
+    type: "scatter",
+    mode: "lines",
+    line: {
+      color: lambda <= 1 ? "#008FAD" : "#F26B5B",
+      width: 2.5
+    },
+    name: "Solución numérica"
+  }], {
+    title: {
+      text: `Esquema upwind — λ = ${lambda.toFixed(2)}`
+    },
+    xaxis: {title: "Posición espacial (índice j)"},
+    yaxis: {title: "u"},
+    height: 420,
+    margin: {t: 65, r: 30, b: 65, l: 70},
+    paper_bgcolor: "white",
+    plot_bgcolor: "white"
+  }, {
+    responsive: true,
+    displayModeBar: false
+  });
+
+  return contenedor;
+}
+```
+
+
+:::
+
+
+### ¿Por qué el esquema se vuelve inestable cuando $\lambda>1$?
+
+El esquema *upwind* puede reescribirse como:
+
+$$
+u_j^{n+1}=(1-\lambda)u_j^n+\lambda u_{j-1}^n.
+$$
+
+Cuando $0\leq\lambda\leq1$, ambos coeficientes son no negativos y suman 1. Por lo tanto, cada nuevo valor es una **combinación convexa** de los valores anteriores, lo que evita la aparición de nuevos máximos o mínimos.
+
+En cambio, cuando $\lambda>1$, el coeficiente $(1-\lambda)$ se vuelve negativo. El nuevo valor deja de ser un promedio ponderado y puede superar los extremos de la solución anterior. Estas desviaciones pueden amplificarse en pasos sucesivos, produciendo las oscilaciones características de la inestabilidad numérica.
+
+Así, la condición CFL no es solamente una restricción teórica: determina si el esquema conserva o pierde esta propiedad de estabilidad.
 
 # Sistema masa-resorte no lineal
 
@@ -1254,14 +1677,42 @@ $$
 :::
 
 
-Introduciendo la velocidad $v(t)=x'(t)$, obtenemos el sistema de primer orden:
+
+Para aplicar los métodos numéricos, transformamos la ecuación diferencial de segundo orden en un sistema de primer orden.
+
+Definimos la velocidad como $v(t)=x'(t)$. Entonces, $x''(t)=v'(t)$ y, al despejar la aceleración en la ecuación original, obtenemos:
 
 $$
-\begin{cases}
-x'(t)=v(t),\\
 v'(t)=\cos(2t)-0.2v(t)-x(t)-5x(t)^3.
-\end{cases}
 $$
+
+Por lo tanto, el sistema equivalente de primer orden es:
+
+
+```{=html}
+<div style="display:flex; justify-content:center; align-items:center; gap:12px; margin:22px auto; border:none; background:transparent;">
+
+  <div style="font-family:'KaTeX_Size4','KaTeX_Main',serif; font-size:39px; line-height:1; font-style:normal; color:#243047; transform:scaleY(0.65); transform-origin:center;">{</div>
+
+  <div style="display:flex; flex-direction:column; gap:9px; font-family:'KaTeX_Main',serif; font-size:21px; line-height:1.3; color:#243047;">
+
+    <div>
+      <span style="font-family:'KaTeX_Math',serif; font-style:italic;">x</span>′(<span style="font-family:'KaTeX_Math',serif; font-style:italic;">t</span>)
+      = <span style="font-family:'KaTeX_Math',serif; font-style:italic;">v</span>(<span style="font-family:'KaTeX_Math',serif; font-style:italic;">t</span>)
+    </div>
+
+    <div>
+      <span style="font-family:'KaTeX_Math',serif; font-style:italic;">v</span>′(<span style="font-family:'KaTeX_Math',serif; font-style:italic;">t</span>)
+      = cos(2<span style="font-family:'KaTeX_Math',serif; font-style:italic;">t</span>)
+      − 0.2<span style="font-family:'KaTeX_Math',serif; font-style:italic;">v</span>(<span style="font-family:'KaTeX_Math',serif; font-style:italic;">t</span>)
+      − <span style="font-family:'KaTeX_Math',serif; font-style:italic;">x</span>(<span style="font-family:'KaTeX_Math',serif; font-style:italic;">t</span>)
+      − 5<span style="font-family:'KaTeX_Math',serif; font-style:italic;">x</span>(<span style="font-family:'KaTeX_Math',serif; font-style:italic;">t</span>)³
+    </div>
+
+  </div>
+</div>
+```
+
 
 
 
@@ -1312,9 +1763,6 @@ Se compara la evolución del desplazamiento de un oscilador no lineal mediante E
 ::: {.simulacion-grafico}
 
 ```{python}
-import numpy as np
-import plotly.graph_objects as go
-
 # Parámetros
 dt_resorte = 0.01
 T_resorte = 20
@@ -1323,12 +1771,11 @@ t_resorte = np.linspace(0, T_resorte, 2001)
 # Condiciones iniciales del problema
 y0 = np.array([0.5, 0.0])
 
+
 def sistema(t, y):
     x, v = y
-    return np.array([
-        v,
-        np.cos(2*t) - 0.2*v - x - 5*x**3
-    ])
+    return np.array([v, np.cos(2 * t) - 0.2 * v - x - 5 * x**3])
+
 
 # Método de Euler explícito
 euler = np.zeros((len(t_resorte), 2))
@@ -1342,34 +1789,40 @@ for n in range(len(t_resorte) - 1):
     t = t_resorte[n]
 
     # Euler
-    euler[n+1] = euler[n] + dt_resorte * sistema(t, euler[n])
+    euler[n + 1] = euler[n] + dt_resorte * sistema(t, euler[n])
 
     # RK4
     y = rk4[n]
 
     k1 = sistema(t, y)
-    k2 = sistema(t + dt_resorte/2, y + dt_resorte*k1/2)
-    k3 = sistema(t + dt_resorte/2, y + dt_resorte*k2/2)
-    k4 = sistema(t + dt_resorte, y + dt_resorte*k3)
+    k2 = sistema(t + dt_resorte / 2, y + dt_resorte * k1 / 2)
+    k3 = sistema(t + dt_resorte / 2, y + dt_resorte * k2 / 2)
+    k4 = sistema(t + dt_resorte, y + dt_resorte * k3)
 
-    rk4[n+1] = y + dt_resorte*(k1 + 2*k2 + 2*k3 + k4)/6
+    rk4[n + 1] = y + dt_resorte * (k1 + 2 * k2 + 2 * k3 + k4) / 6
 
 # Comparación de desplazamientos
 fig_resorte = go.Figure()
 
-fig_resorte.add_trace(go.Scatter(
-    x=t_resorte,
-    y=euler[:, 0],
-    mode="lines",
-    name="Euler explícito"
-))
+fig_resorte.add_trace(
+    go.Scatter(
+        x=t_resorte,
+        y=euler[:, 0],
+        mode="lines",
+        name="Euler explícito",
+        line=dict(color="#008FAD", width=2.5),
+    )
+)
 
-fig_resorte.add_trace(go.Scatter(
-    x=t_resorte,
-    y=rk4[:, 0],
-    mode="lines",
-    name="Runge-Kutta 4"
-))
+fig_resorte.add_trace(
+    go.Scatter(
+        x=t_resorte,
+        y=rk4[:, 0],
+        mode="lines",
+        name="Runge-Kutta 4",
+        line=dict(color="#F26B5B", width=2.5),
+    )
+)
 
 fig_resorte.update_layout(
     title="Oscilador no lineal — Comparación de métodos",
@@ -1377,7 +1830,9 @@ fig_resorte.update_layout(
     yaxis_title="Desplazamiento x(t)",
     template="plotly_white",
     hovermode="x unified",
-    height=500
+    width=580,
+    height=380,
+    autosize=False,
 )
 
 fig_resorte.show(config={"displayModeBar": False})
@@ -1388,7 +1843,7 @@ fig_resorte.show(config={"displayModeBar": False})
 
 ::: {.simulacion-resultado}
 
-#### Interpretación
+**Interpretación**
 
 Los métodos de Euler explícito y Runge-Kutta de cuarto orden aproximan la evolución del mismo sistema dinámico.
 
@@ -1423,9 +1878,9 @@ Trayectorias en el plano de fase
 :::
 
 ::: {.simulacion-descripcion}
-El plano de fase representa la velocidad en función de la posición del oscilador.
 
-Se comparan las trayectorias calculadas mediante Euler explícito y Runge-Kutta de cuarto orden, permitiendo observar las diferencias en la evolución dinámica del sistema.
+Se comparan las trayectorias obtenidas mediante Euler explícito y Runge-Kutta de cuarto orden (RK4) para las mismas condiciones iniciales, representando la velocidad en función de la posición.
+
 :::
 
 ::: {.simulacion-grafico}
@@ -1435,53 +1890,61 @@ Se comparan las trayectorias calculadas mediante Euler explícito y Runge-Kutta 
 fig_fase = go.Figure()
 
 # Trayectoria de Euler explícito
-fig_fase.add_trace(go.Scatter(
-    x=euler[:, 0],
-    y=euler[:, 1],
-    mode="lines",
-    name="Euler explícito",
-    line=dict(color="#2563EB", width=2),
-    customdata=t_resorte,
-    hovertemplate=(
-        "Posición: %{x:.3f}"
-        "<br>Velocidad: %{y:.3f}"
-        "<br>Tiempo: %{customdata:.2f}"
-        "<extra></extra>"
+fig_fase.add_trace(
+    go.Scatter(
+        x=euler[:, 0],
+        y=euler[:, 1],
+        mode="lines",
+        name="Euler explícito",
+        line=dict(color="#008FAD", width=2),
+        customdata=t_resorte,
+        hovertemplate=(
+            "Posición: %{x:.3f}"
+            "<br>Velocidad: %{y:.3f}"
+            "<br>Tiempo: %{customdata:.2f}"
+            "<extra></extra>"
+        ),
     )
-))
+)
 
 # Trayectoria de RK4
-fig_fase.add_trace(go.Scatter(
-    x=rk4[:, 0],
-    y=rk4[:, 1],
-    mode="lines",
-    name="Runge-Kutta 4",
-    line=dict(color="#E67E22", width=2),
-    customdata=t_resorte,
-    hovertemplate=(
-        "Posición: %{x:.3f}"
-        "<br>Velocidad: %{y:.3f}"
-        "<br>Tiempo: %{customdata:.2f}"
-        "<extra></extra>"
+fig_fase.add_trace(
+    go.Scatter(
+        x=rk4[:, 0],
+        y=rk4[:, 1],
+        mode="lines",
+        name="Runge-Kutta 4",
+        line=dict(color="#F26B5B", width=2),
+        customdata=t_resorte,
+        hovertemplate=(
+            "Posición: %{x:.3f}"
+            "<br>Velocidad: %{y:.3f}"
+            "<br>Tiempo: %{customdata:.2f}"
+            "<extra></extra>"
+        ),
     )
-))
+)
 
 # Estado inicial
-fig_fase.add_trace(go.Scatter(
-    x=[y0[0]],
-    y=[y0[1]],
-    mode="markers",
-    name="Estado inicial",
-    marker=dict(color="#16A34A", size=11)
-))
+fig_fase.add_trace(
+    go.Scatter(
+        x=[y0[0]],
+        y=[y0[1]],
+        mode="markers",
+        name="Estado inicial",
+        marker=dict(color="#805AD5", size=11),
+    )
+)
 
 fig_fase.update_layout(
     title="Plano de fase — Oscilador no lineal",
     xaxis_title="Posición x(t)",
     yaxis_title="Velocidad v(t)",
     template="plotly_white",
-    height=550,
-    hovermode="closest"
+    width=580,
+    height=380,
+    autosize=False,
+    hovermode="closest",
 )
 
 fig_fase.show(config={"displayModeBar": False})
@@ -1492,28 +1955,19 @@ fig_fase.show(config={"displayModeBar": False})
 
 ::: {.simulacion-resultado}
 
-#### Interpretación
 
-Cada punto de la trayectoria representa un estado del sistema:
+**Interpretación**
 
-$$
-(x(t),v(t)).
-$$
+Las trayectorias muestran la relación entre posición y velocidad obtenida mediante Euler explícito y Runge-Kutta de cuarto orden.
 
-Las curvas permiten observar cómo evolucionan conjuntamente la posición y la velocidad.
+Aunque ambos métodos parten del mismo estado inicial, sus trayectorias presentan diferencias a lo largo de la evolución. Estas discrepancias reflejan que cada método aproxima de manera distinta la solución del sistema.
 
-Como el oscilador está sometido a una fuerza externa periódica $\cos(2t)$, el sistema no es autónomo en las variables $(x,v)$.
+El plano de fase permite comparar el comportamiento dinámico de ambas aproximaciones, pero no determina por sí solo cuál tiene menor error respecto de la solución exacta.
 
-Por ello, el gráfico representa una **proyección de la trayectoria sobre el plano posición-velocidad**, y no el retrato de fase completo de un sistema autónomo bidimensional.
 
 :::
 
 :::
-
-
-## Evolución animada en el plano de fase
-
-La animación muestra cómo evoluciona el estado $(x(t),v(t))$ del oscilador no lineal. La curva representa la trayectoria calculada mediante RK4 y el punto rojo indica el estado del sistema en cada instante.
 
 
 ::: {.simulacion-cientifica}
@@ -1544,33 +1998,33 @@ indices_fase = np.arange(0, len(t_resorte), 20)
 fig_fase_animada = go.Figure()
 
 # Trayectoria completa como referencia
-fig_fase_animada.add_trace(go.Scatter(
-    x=rk4[:, 0],
-    y=rk4[:, 1],
-    mode="lines",
-    name="Trayectoria RK4",
-    line=dict(color="#94A3B8", width=2)
-))
+fig_fase_animada.add_trace(
+    go.Scatter(
+        x=rk4[:, 0],
+        y=rk4[:, 1],
+        mode="lines",
+        name="Trayectoria RK4",
+        line=dict(color="#94A3B8", width=2),
+    )
+)
 
 # Punto que representa el estado actual
-fig_fase_animada.add_trace(go.Scatter(
-    x=[rk4[0, 0]],
-    y=[rk4[0, 1]],
-    mode="markers",
-    name="Estado actual",
-    marker=dict(color="#DC2626", size=13)
-))
+fig_fase_animada.add_trace(
+    go.Scatter(
+        x=[rk4[0, 0]],
+        y=[rk4[0, 1]],
+        mode="markers",
+        name="Estado actual",
+        marker=dict(color="#805AD5", size=13),
+    )
+)
 
-# Animación: solo actualizamos el punto rojo
+# Animación: solo actualizamos el punto movil
 fig_fase_animada.frames = [
     go.Frame(
-        data=[go.Scatter(
-            x=[rk4[n, 0]],
-            y=[rk4[n, 1]],
-            mode="markers"
-        )],
+        data=[go.Scatter(x=[rk4[n, 0]], y=[rk4[n, 1]], mode="markers")],
         traces=[1],
-        name=str(n)
+        name=str(n),
     )
     for n in indices_fase
 ]
@@ -1579,65 +2033,73 @@ fig_fase_animada.update_layout(
     title="Evolución del estado — Plano de fase",
     xaxis_title="Posición x(t)",
     yaxis_title="Velocidad v(t)",
-    xaxis=dict(
-        range=[rk4[:, 0].min()-0.2, rk4[:, 0].max()+0.2]
-    ),
-    yaxis=dict(
-        range=[rk4[:, 1].min()-0.2, rk4[:, 1].max()+0.2]
-    ),
+    xaxis=dict(range=[rk4[:, 0].min() - 0.2, rk4[:, 0].max() + 0.2]),
+    yaxis=dict(range=[rk4[:, 1].min() - 0.2, rk4[:, 1].max() + 0.2]),
     template="plotly_white",
-    height=550,
-    sliders=[{
-        "active": 0,
-        "currentvalue": {"prefix": "Tiempo t = "},
-        "steps": [
-            {
-                "label": f"{t_resorte[n]:.1f}",
-                "method": "animate",
-                "args": [
-                    [str(n)],
-                    {
-                        "mode": "immediate",
-                        "frame": {"duration": 0, "redraw": True},
-                        "transition": {"duration": 0}
-                    }
-                ]
-            }
-            for n in indices_fase
-        ]
-    }],
-    updatemenus=[{
-        "type": "buttons",
-        "direction": "left",
-        "x": 0,
-        "y": -0.18,
-        "buttons": [
-            {
-                "label": "▶ Reproducir",
-                "method": "animate",
-                "args": [
-                    None,
-                    {
-                        "frame": {"duration": 80, "redraw": True},
-                        "transition": {"duration": 0},
-                        "fromcurrent": True
-                    }
-                ]
-            },
-            {
-                "label": "⏸ Pausar",
-                "method": "animate",
-                "args": [
-                    [None],
-                    {
-                        "mode": "immediate",
-                        "frame": {"duration": 0},
-                        "transition": {"duration": 0}
-                    }
-                ]
-            }
-        ]
-    }]
+    width=580,
+    height=420,
+    margin=dict(l=60, r=35, t=50, b=100),
+    autosize=False,
+    sliders=[
+        {
+            "active": 0,
+            "x": 0.22,
+            "len": 0.78,
+            "y": -0.12,
+            "currentvalue": {"prefix": "Tiempo t = "},
+            "steps": [
+                {
+                    "label": f"{t_resorte[n]:.1f}",
+                    "method": "animate",
+                    "args": [
+                        [str(n)],
+                        {
+                            "mode": "immediate",
+                            "frame": {"duration": 0, "redraw": True},
+                            "transition": {"duration": 0},
+                        },
+                    ],
+                }
+                for n in indices_fase
+            ],
+        }
+    ],
+    updatemenus=[
+        {
+            "type": "buttons",
+            "direction": "left",
+            "x": 0,
+            "y": -0.12,
+            "xanchor": "left",
+            "yanchor": "top",
+            "buttons": [
+                {
+                    "label": "▶",
+                    "method": "animate",
+                    "args": [
+                        None,
+                        {
+                            "frame": {"duration": 80, "redraw": True},
+                            "transition": {"duration": 0},
+                            "fromcurrent": True,
+                        },
+                    ],
+                },
+                {
+                    "label": "⏸",
+                    "method": "animate",
+                    "args": [
+                        [None],
+                        {
+                            "mode": "immediate",
+                            "frame": {"duration": 0},
+                            "transition": {"duration": 0},
+                        },
+                    ],
+                },
+            ],
+        }
+    ],
 )
 
 fig_fase_animada.show(config={"displayModeBar": False})
@@ -1648,34 +2110,251 @@ fig_fase_animada.show(config={"displayModeBar": False})
 
 ::: {.simulacion-resultado}
 
-#### Interpretación
 
-El punto móvil representa el estado instantáneo del oscilador:
+**Interpretación**
 
-$$
-(x(t),v(t)).
-$$
+El punto móvil permite seguir el recorrido temporal de la trayectoria calculada mediante Runge-Kutta de cuarto orden.
 
-La animación permite observar cómo cambian simultáneamente la posición y la velocidad durante el movimiento.
+A diferencia del gráfico estático, la animación permite identificar el orden en que se visitan las distintas regiones del plano posición-velocidad y observar cómo cambia el estado del oscilador a medida que transcurre el tiempo.
 
-Debido al amortiguamiento, la fuerza externa periódica y la no linealidad del resorte, la trayectoria presenta un comportamiento dinámico que no corresponde al de un oscilador armónico simple.
+La trayectoria refleja la acción conjunta del amortiguamiento, la fuerza externa periódica y la no linealidad del resorte.
 
-El plano posición-velocidad permite visualizar esta evolución, aunque no representa por sí solo el espacio de estados completo del sistema forzado.
 
 :::
 
 :::
 
+## Experimento numérico: influencia del paso temporal
 
 
-# Referencias
+::: {.simulacion-cientifica}
 
+::: {.simulacion-etiqueta}
+EXPERIMENTO NUMÉRICO 03 · MASA-RESORTE NO LINEAL
+:::
+
+
+El tamaño del paso temporal $\Delta t$ influye en la precisión y el comportamiento de los métodos de integración.
+
+Modifica $\Delta t$ y compara las soluciones obtenidas mediante Euler explícito e implícito para el mismo intervalo $t\in[0,20]$, manteniendo las condiciones iniciales $x(0)=0.5$ y $v(0)=0$.
+
+```{ojs}
+//| echo: false
+
+viewof dtResorte = Inputs.range([0.01, 0.5], {
+  value: 0.01,
+  step: 0.01,
+  label: "Paso temporal (Δt)"
+})
+```
+
+```{ojs}
+//| echo: false
+
+solucionesResorte = {
+  const T = 20;
+  const N = Math.ceil(T / dtResorte);
+  const h = T / N;
+
+  const t = [0];
+  const explicito = [0.5];
+  const implicito = [0.5];
+
+  let xe = 0.5, ve = 0;
+  let xi = 0.5, vi = 0;
+
+  function aceleracion(t, x, v) {
+    return Math.cos(2*t) - 0.2*v - x - 5*x*x*x;
+  }
+
+  for (let n = 0; n < N; n++) {
+    const tn = n*h;
+    const ts = (n+1)*h;
+
+    // Euler explícito
+    const xeNuevo = xe + h*ve;
+    const veNuevo = ve + h*aceleracion(tn, xe, ve);
+
+    xe = xeNuevo;
+    ve = veNuevo;
+
+    // Euler implícito: Newton para resolver el sistema no lineal
+    let x = xi + h*vi;
+    let v = vi + h*aceleracion(ts, x, vi);
+
+    for (let k = 0; k < 20; k++) {
+      const f1 = x - xi - h*v;
+      const f2 = v - vi - h*aceleracion(ts, x, v);
+
+      const a = 1;
+      const b = -h;
+      const c = h*(1 + 15*x*x);
+      const d = 1 + 0.2*h;
+
+      const det = a*d - b*c;
+
+      const dx = (-d*f1 + b*f2)/det;
+      const dv = (c*f1 - a*f2)/det;
+
+      x += dx;
+      v += dv;
+
+      if (Math.max(Math.abs(dx), Math.abs(dv)) < 1e-10) break;
+    }
+
+    xi = x;
+    vi = v;
+
+    t.push(ts);
+    explicito.push(xe);
+    implicito.push(xi);
+  }
+
+  return {t, explicito, implicito};
+}
+```
+
+```{ojs}
+//| echo: false
+
+graficoResorte = {
+  const Plotly = await require(
+    "https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.3/plotly.min.js"
+  );
+
+  const contenedor = document.createElement("div");
+  contenedor.style.width = "100%";
+
+  await Plotly.newPlot(contenedor, [
+    {
+      x: solucionesResorte.t,
+      y: solucionesResorte.explicito,
+      type: "scatter",
+      mode: "lines",
+      name: "Euler explícito",
+      xaxis: "x",
+      yaxis: "y",
+      line: {color: "#008FAD", width: 3}
+    },
+    {
+      x: solucionesResorte.t,
+      y: solucionesResorte.implicito,
+      type: "scatter",
+      mode: "lines",
+      name: "Euler implícito",
+      xaxis: "x2",
+      yaxis: "y2",
+      line: {color: "#F26B5B", width: 2.5}
+    }
+  ], {
+    title: {
+      text: `Sistema masa-resorte — Δt ≈ ${dtResorte.toFixed(2)}`
+    },
+
+    grid: {
+      rows: 2,
+      columns: 1,
+      pattern: "independent",
+      roworder: "top to bottom"
+    },
+
+    xaxis: {
+      title: "Tiempo (t)",
+      range: [0, 20]
+    },
+
+    yaxis: {
+      title: "Euler explícito",
+      automargin: true
+    },
+
+    xaxis2: {
+      title: "",
+      range: [0, 20]
+    },
+
+    yaxis2: {
+      title: "Euler implícito",
+      automargin: true
+    },
+
+    height: 470,
+    margin: {t: 55, r: 25, b: 45, l: 100},
+    paper_bgcolor: "white",
+    plot_bgcolor: "white",
+    legend: {
+      orientation: "h",
+      x: 0.5,
+      xanchor: "center",
+      y: -0.12
+    }
+  }, {
+    responsive: true,
+    displayModeBar: false
+  });
+
+  return contenedor;
+}
+```
+
+
+:::
+
+
+### ¿Cómo influye el paso temporal en la solución numérica?
+
+El sistema masa-resorte no lineal presenta un comportamiento oscilatorio determinado por la interacción entre la fuerza externa, el amortiguamiento y el término cúbico de restitución.
+
+Al modificar el paso temporal $\Delta t$, podemos observar diferencias importantes entre los métodos de Euler explícito e implícito.
+
+**Euler explícito** calcula cada nuevo estado utilizando únicamente la información del instante anterior. Cuando el paso temporal aumenta, los errores de aproximación pueden amplificarse y producir oscilaciones de amplitud creciente. En este experimento, para determinados valores de $\Delta t$, la solución llega a presentar un crecimiento numérico descontrolado, incompatible con el comportamiento esperado del sistema.
+
+Este efecto se intensifica debido al término no lineal $5x(t)^3$, cuya magnitud crece rápidamente cuando la posición aumenta.
+
+**Euler implícito**, en cambio, determina el nuevo estado resolviendo un sistema de ecuaciones no lineales en cada paso temporal. En las simulaciones observadas, mantiene las oscilaciones acotadas incluso para valores de $\Delta t$ que provocan la divergencia del método explícito.
+
+Sin embargo, **una solución acotada no garantiza una solución precisa**. Aunque Euler implícito conserve un comportamiento estable, un paso temporal grande puede alterar la amplitud, la fase y otros detalles de las oscilaciones.
+
+::: {.simulacion-resultado}
+
+**Interpretación de los resultados**
+
+
+Los dos gráficos utilizan escalas verticales independientes. Esto permite observar el comportamiento de Euler implícito incluso cuando Euler explícito alcanza valores extremadamente grandes.
+
+El experimento evidencia que la elección del paso temporal afecta tanto a la estabilidad como a la precisión de la aproximación numérica.
+
+**La estabilidad y la precisión son propiedades distintas:** un método puede producir resultados acotados y, aun así, representar de manera poco fiel la dinámica del sistema.
+
+Para evaluar cuantitativamente la precisión sería necesario comparar ambas aproximaciones con una solución de referencia obtenida mediante un método de mayor orden y tolerancias suficientemente pequeñas.
+
+:::
+
+# Conclusiones
+
+Los tres problemas estudiados —el sistema masa-resorte no lineal, la ecuación de transporte y la ecuación del calor— permiten observar cómo las características de cada modelo condicionan el comportamiento de los métodos numéricos.
+
+En el **sistema masa-resorte**, el aumento del paso temporal puede provocar un crecimiento descontrolado de la solución explícita, mientras que el método implícito mantiene las oscilaciones acotadas en los casos explorados.
+
+En la **ecuación de transporte**, la relación entre los pasos espacial y temporal determina el cumplimiento de la condición de estabilidad y afecta la propagación numérica de la información.
+
+En la **ecuación del calor**, el método explícito presenta una restricción de estabilidad sobre el paso temporal, mientras que el implícito permite utilizar pasos mayores, a cambio de resolver un sistema de ecuaciones.
+
+### Reflexión final
+
+::: {.simulacion-resultado}
+
+Estos experimentos muestran que **la estabilidad, la precisión y el costo computacional son criterios diferentes que deben considerarse conjuntamente**.
+
+Un método estable no garantiza una aproximación precisa, así como un paso temporal pequeño no siempre constituye la alternativa más eficiente.
+
+**No existe un método numérico universalmente mejor:** su elección depende de las propiedades del problema y de los objetivos de la simulación.
+
+:::
 
 ## Documentación
 
-Este proyecto presenta una implementación computacional de tres problemas de ecuaciones diferenciales: difusión de calor, transporte lineal y un sistema masa-resorte no lineal.
-
-Las simulaciones fueron desarrolladas en Python y permiten explorar la evolución de las soluciones numéricas, comparar métodos y analizar sus resultados.
+Los siguientes recursos permiten consultar el informe académico original, explorar el código fuente y acceder a los materiales utilizados en el desarrollo del proyecto.
 
 ### Recursos del proyecto
 
@@ -1692,8 +2371,7 @@ Las simulaciones fueron desarrolladas en Python y permiten explorar la evolució
   </a>
 
   
-<a class="tarjeta-proyecto" href="https://github.com/anagundermann/metodos-numericos" 
-target="_blank" rel="noopener noreferrer">
+<a class="tarjeta-proyecto" href="https://github.com/anagundermann/metodos-numericos" target="_blank" rel="noopener noreferrer">
 
     <div class="tarjeta-etiqueta">CÓDIGO FUENTE</div>
     <h3>Repositorio GitHub</h3>
@@ -1712,7 +2390,7 @@ target="_blank" rel="noopener noreferrer">
 ```
 
 
-### Herramientas utilizadas
+#### Herramientas utilizadas
 
 **Python:** implementación de métodos numéricos y procesamiento de resultados.
 
@@ -1723,7 +2401,3 @@ target="_blank" rel="noopener noreferrer">
 **Quarto:** integración de explicaciones matemáticas, código ejecutable y resultados en una página web.
 
 **Mathematica:** implementación original de los algoritmos numéricos del informe académico.
-
----
-
-*Proyecto académico de Métodos Numéricos · Ingeniería Civil Matemática · Universidad de Valparaíso*
