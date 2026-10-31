@@ -539,3 +539,23 @@ input[type="range"] {
     box-sizing: border-box;
   }
 }
+
+
+/* FÓRMULAS MATEMÁTICAS EN CELULARES */
+
+@media (max-width: 650px) {
+
+  main.content .katex-display {
+    max-width: 100%;
+    /* Respeta el ancho de la pantalla */
+    overflow-x: auto;
+    /* Permite desplazar fórmulas largas */
+    overflow-y: hidden;
+    /* Evita desplazamiento vertical interno */
+    padding: 0.25rem 0 0.5rem;
+    /* Agrega espacio alrededor de la fórmula */
+    -webkit-overflow-scrolling: touch;
+    /* Suaviza el desplazamiento táctil */
+  }
+
+}
