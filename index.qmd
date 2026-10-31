@@ -187,13 +187,17 @@ fig.update_layout(
     xaxis_title="Posición x",
     yaxis_title="Temperatura u(x,0)",
     template="plotly_white",
-    width=580,
     height=380,
-    autosize=False,
+    autosize=True,
+    dragmode=False,
+    margin=dict(l=65, r=20, t=25, b=55),
 )
 
 
 from IPython.display import HTML, display
+
+fig.update_xaxes(automargin=True)
+fig.update_yaxes(automargin=True)
 
 display(
     HTML(
@@ -201,7 +205,12 @@ display(
             full_html=False,
             include_plotlyjs="cdn",
             include_mathjax=False,
-            config={"displayModeBar": False},
+            config={
+                "displayModeBar": False,
+                "scrollZoom": False,
+                "doubleClick": False,
+                "responsive": True,
+            },
         )
     )
 )
@@ -365,7 +374,6 @@ sliders = [
 ]
 
 fig.update_layout(
-    title="Evolución de la temperatura — Euler explícito",
     xaxis_title="Posición x",
     yaxis_title="Temperatura u(x,t)",
     xaxis=dict(range=[2, 6]),
@@ -377,13 +385,16 @@ fig.update_layout(
     ),
     template="plotly_white",
     sliders=sliders,
-    width=580,
     height=420,
-    margin=dict(l=60, r=35, t=50, b=100),
-    autosize=False,
+    margin=dict(l=60, r=35, t=35, b=100),
+    autosize=True,
+    dragmode=False,
 )
 
 from IPython.display import HTML, display
+
+fig.update_xaxes(automargin=True)
+fig.update_yaxes(automargin=True)
 
 display(
     HTML(
@@ -391,7 +402,12 @@ display(
             full_html=False,
             include_plotlyjs="cdn",
             include_mathjax=False,
-            config={"displayModeBar": False},
+            config={
+                "displayModeBar": False,
+                "scrollZoom": False,
+                "doubleClick": False,
+                "responsive": True,
+            },
         )
     )
 )
@@ -531,7 +547,6 @@ fig_imp.frames = [
 
 
 fig_imp.update_layout(
-    title="Evolución de la temperatura — Euler implícito",
     xaxis_title="Posición x",
     yaxis_title="Temperatura u(x,t)",
     xaxis=dict(range=[2, 6]),
@@ -542,10 +557,10 @@ fig_imp.update_layout(
         ]
     ),
     template="plotly_white",
-    width=580,
     height=420,
-    margin=dict(l=60, r=35, t=50, b=100),
-    autosize=False,
+    margin=dict(l=60, r=35, t=35, b=100),
+    autosize=True,
+    dragmode=False,
     sliders=[
         {
             "active": 0,
@@ -569,7 +584,16 @@ fig_imp.update_layout(
     ],
 )
 
-fig_imp.show(config={"displayModeBar": False})
+fig_imp.update_xaxes(automargin=True)
+fig_imp.update_yaxes(automargin=True)
+fig_imp.show(
+    config={
+        "displayModeBar": False,
+        "scrollZoom": False,
+        "doubleClick": False,
+        "responsive": True,
+    }
+)
 ```
 
 
@@ -692,21 +716,29 @@ slider_comp = [
 ]
 
 fig_comp.update_layout(
-    title="Comparación de métodos — Ecuación del calor",
     xaxis_title="Posición x",
     yaxis_title="Temperatura u(x,t)",
     xaxis=dict(range=[2, 6]),
     yaxis=dict(range=[y_min, y_max]),
     template="plotly_white",
-    width=580,
     height=420,
-    autosize=False,
+    autosize=True,
+    dragmode=False,
     sliders=slider_comp,
     legend=dict(orientation="h", x=0.5, xanchor="center", y=1.02, yanchor="bottom"),
-    margin=dict(l=65, r=20, t=100, b=100),
+    margin=dict(l=65, r=20, t=65, b=100),
 )
 
-fig_comp.show(config={"displayModeBar": False})
+fig_comp.update_xaxes(automargin=True)
+fig_comp.update_yaxes(automargin=True)
+fig_comp.show(
+    config={
+        "displayModeBar": False,
+        "scrollZoom": False,
+        "doubleClick": False,
+        "responsive": True,
+    }
+)
 ```
 
 :::
@@ -774,16 +806,15 @@ fig_dif.frames = [
 ]
 
 fig_dif.update_layout(
-    title="Diferencia absoluta — Euler explícito vs. implícito",
     xaxis_title="Posición x",
     yaxis_title="Diferencia absoluta",
     xaxis=dict(range=[2, 6]),
     yaxis=dict(range=[0, max(np.max(d) for d in diferencias) * 1.1]),
     template="plotly_white",
-    width=580,
     height=420,
-    margin=dict(l=60, r=35, t=50, b=100),
-    autosize=False,
+    margin=dict(l=60, r=35, t=35, b=100),
+    autosize=True,
+    dragmode=False,
     sliders=[
         {
             "active": 0,
@@ -807,7 +838,16 @@ fig_dif.update_layout(
     ],
 )
 
-fig_dif.show(config={"displayModeBar": False})
+fig_dif.update_xaxes(automargin=True)
+fig_dif.update_yaxes(automargin=True)
+fig_dif.show(
+    config={
+        "displayModeBar": False,
+        "scrollZoom": False,
+        "doubleClick": False,
+        "responsive": True,
+    }
+)
 ```
 
 :::
@@ -994,9 +1034,19 @@ graficoCalor = {
   const contenedor = document.createElement("div");
   contenedor.style.width = "100%";
 
+  // Título HTML: admite salto de línea en celulares sin alterar el gráfico.
+  const titulo = document.createElement("div");
+  titulo.className = "simulacion-titulo simulacion-titulo-dinamico";
+  titulo.textContent = `Ecuación del calor — r = ${rCalor.toFixed(2)}`;
+  contenedor.appendChild(titulo);
+
+  const graficoInterno = document.createElement("div");
+  graficoInterno.style.width = "100%";
+  contenedor.appendChild(graficoInterno);
+
   const x = Array.from({length: solucionesCalor.inicial.length}, (_, j) => j);
 
-  await Plotly.newPlot(contenedor, [
+  await Plotly.newPlot(graficoInterno, [
     {
       x: x,
       y: solucionesCalor.inicial,
@@ -1022,20 +1072,32 @@ graficoCalor = {
       line: {color:"#F26B5B", width:2.5}
     }
   ], {
-    title: {
-      text: `Ecuación del calor — r = ${rCalor.toFixed(2)}`
-    },
     xaxis: {title:"Posición espacial (índice j)"},
     yaxis: {title:"Temperatura"},
-    height:420,
-    margin:{t:65,r:30,b:65,l:70},
+    dragmode: false,
+    height: 420,
+    margin:{t:25,r:30,b:65,l:70},
     paper_bgcolor:"white",
     plot_bgcolor:"white",
     legend:{orientation:"h", y:-0.25}
   }, {
     responsive:true,
-    displayModeBar:false
+    displayModeBar: false,
+    scrollZoom: false,
+    doubleClick: false
   });
+
+  // Redimensiona Plotly cuando Quarto inserta el gráfico en la página.
+  let anchoAnterior = 0;
+  const observador = new ResizeObserver(([entrada]) => {
+    const ancho = entrada.contentRect.width;
+    if (ancho > 0 && Math.abs(ancho - anchoAnterior) > 1) {
+      anchoAnterior = ancho;
+      Plotly.Plots.resize(graficoInterno);
+    }
+  });
+  observador.observe(contenedor);
+  invalidation.then(() => observador.disconnect());
 
   return contenedor;
 }
@@ -1289,14 +1351,23 @@ fig_trans.update_layout(
     xaxis=dict(range=[0, 10]),
     yaxis=dict(range=[-0.1, 1.1]),
     template="plotly_white",
-    width=580,
     height=420,
-    margin=dict(l=60, r=35, t=50, b=100),
-    autosize=False,
+    margin=dict(l=60, r=35, t=35, b=100),
+    autosize=True,
+    dragmode=False,
     sliders=slider_trans,
 )
 
-fig_trans.show(config={"displayModeBar": False})
+fig_trans.update_xaxes(automargin=True)
+fig_trans.update_yaxes(automargin=True)
+fig_trans.show(
+    config={
+        "displayModeBar": False,
+        "scrollZoom": False,
+        "doubleClick": False,
+        "responsive": True,
+    }
+)
 ```
 
 
@@ -1436,15 +1507,24 @@ fig_comparacion_trans.update_layout(
     xaxis=dict(range=[0, 10]),
     yaxis=dict(range=[-0.1, 1.1]),
     template="plotly_white",
-    width=580,
     height=420,
-    margin=dict(l=60, r=35, t=50, b=100),
-    autosize=False,
+    margin=dict(l=60, r=35, t=35, b=100),
+    autosize=True,
+    dragmode=False,
     sliders=slider_comparacion_trans,
     legend=dict(orientation="h", y=1.12, x=0),
 )
 
-fig_comparacion_trans.show(config={"displayModeBar": False})
+fig_comparacion_trans.update_xaxes(automargin=True)
+fig_comparacion_trans.update_yaxes(automargin=True)
+fig_comparacion_trans.show(
+    config={
+        "displayModeBar": False,
+        "scrollZoom": False,
+        "doubleClick": False,
+        "responsive": True,
+    }
+)
 ```
 
 :::
@@ -1604,9 +1684,19 @@ grafico = {
   const contenedor = document.createElement("div");
   contenedor.style.width = "100%";
 
+  // Título HTML: admite salto de línea en celulares sin alterar el gráfico.
+  const titulo = document.createElement("div");
+  titulo.className = "simulacion-titulo simulacion-titulo-dinamico";
+  titulo.textContent = `Esquema upwind — λ = ${lambda.toFixed(2)}`;
+  contenedor.appendChild(titulo);
+
+  const graficoInterno = document.createElement("div");
+  graficoInterno.style.width = "100%";
+  contenedor.appendChild(graficoInterno);
+
   const x = Array.from({length: solucion.length}, (_, j) => j);
 
-  await Plotly.newPlot(contenedor, [{
+  await Plotly.newPlot(graficoInterno, [{
     x: x,
     y: solucion,
     type: "scatter",
@@ -1617,19 +1707,31 @@ grafico = {
     },
     name: "Solución numérica"
   }], {
-    title: {
-      text: `Esquema upwind — λ = ${lambda.toFixed(2)}`
-    },
     xaxis: {title: "Posición espacial (índice j)"},
     yaxis: {title: "u"},
+    dragmode: false,
     height: 420,
-    margin: {t: 65, r: 30, b: 65, l: 70},
+    margin: {t: 25, r: 30, b: 65, l: 70},
     paper_bgcolor: "white",
     plot_bgcolor: "white"
   }, {
     responsive: true,
-    displayModeBar: false
+    displayModeBar: false,
+    scrollZoom: false,
+    doubleClick: false
   });
+
+  // Redimensiona Plotly cuando Quarto inserta el gráfico en la página.
+  let anchoAnterior = 0;
+  const observador = new ResizeObserver(([entrada]) => {
+    const ancho = entrada.contentRect.width;
+    if (ancho > 0 && Math.abs(ancho - anchoAnterior) > 1) {
+      anchoAnterior = ancho;
+      Plotly.Plots.resize(graficoInterno);
+    }
+  });
+  observador.observe(contenedor);
+  invalidation.then(() => observador.disconnect());
 
   return contenedor;
 }
@@ -1825,17 +1927,26 @@ fig_resorte.add_trace(
 )
 
 fig_resorte.update_layout(
-    title="Oscilador no lineal — Comparación de métodos",
     xaxis_title="Tiempo t",
     yaxis_title="Desplazamiento x(t)",
     template="plotly_white",
     hovermode="x unified",
-    width=580,
     height=380,
-    autosize=False,
+    autosize=True,
+    dragmode=False,
+    margin=dict(l=65, r=20, t=25, b=55),
 )
 
-fig_resorte.show(config={"displayModeBar": False})
+fig_resorte.update_xaxes(automargin=True)
+fig_resorte.update_yaxes(automargin=True)
+fig_resorte.show(
+    config={
+        "displayModeBar": False,
+        "scrollZoom": False,
+        "doubleClick": False,
+        "responsive": True,
+    }
+)
 ```
 
 
@@ -1937,17 +2048,26 @@ fig_fase.add_trace(
 )
 
 fig_fase.update_layout(
-    title="Plano de fase — Oscilador no lineal",
     xaxis_title="Posición x(t)",
     yaxis_title="Velocidad v(t)",
     template="plotly_white",
-    width=580,
     height=380,
-    autosize=False,
+    autosize=True,
+    dragmode=False,
     hovermode="closest",
+    margin=dict(l=65, r=20, t=25, b=55),
 )
 
-fig_fase.show(config={"displayModeBar": False})
+fig_fase.update_xaxes(automargin=True)
+fig_fase.update_yaxes(automargin=True)
+fig_fase.show(
+    config={
+        "displayModeBar": False,
+        "scrollZoom": False,
+        "doubleClick": False,
+        "responsive": True,
+    }
+)
 ```
 
 
@@ -2030,16 +2150,15 @@ fig_fase_animada.frames = [
 ]
 
 fig_fase_animada.update_layout(
-    title="Evolución del estado — Plano de fase",
     xaxis_title="Posición x(t)",
     yaxis_title="Velocidad v(t)",
     xaxis=dict(range=[rk4[:, 0].min() - 0.2, rk4[:, 0].max() + 0.2]),
     yaxis=dict(range=[rk4[:, 1].min() - 0.2, rk4[:, 1].max() + 0.2]),
     template="plotly_white",
-    width=580,
     height=420,
-    margin=dict(l=60, r=35, t=50, b=100),
-    autosize=False,
+    margin=dict(l=60, r=35, t=35, b=100),
+    autosize=True,
+    dragmode=False,
     sliders=[
         {
             "active": 0,
@@ -2102,7 +2221,16 @@ fig_fase_animada.update_layout(
     ],
 )
 
-fig_fase_animada.show(config={"displayModeBar": False})
+fig_fase_animada.update_xaxes(automargin=True)
+fig_fase_animada.update_yaxes(automargin=True)
+fig_fase_animada.show(
+    config={
+        "displayModeBar": False,
+        "scrollZoom": False,
+        "doubleClick": False,
+        "responsive": True,
+    }
+)
 ```
 
 
@@ -2225,7 +2353,17 @@ graficoResorte = {
   const contenedor = document.createElement("div");
   contenedor.style.width = "100%";
 
-  await Plotly.newPlot(contenedor, [
+  // Título HTML: admite salto de línea en celulares sin alterar el gráfico.
+  const titulo = document.createElement("div");
+  titulo.className = "simulacion-titulo simulacion-titulo-dinamico";
+  titulo.textContent = `Sistema masa-resorte — Δt ≈ ${dtResorte.toFixed(2)}`;
+  contenedor.appendChild(titulo);
+
+  const graficoInterno = document.createElement("div");
+  graficoInterno.style.width = "100%";
+  contenedor.appendChild(graficoInterno);
+
+  await Plotly.newPlot(graficoInterno, [
     {
       x: solucionesResorte.t,
       y: solucionesResorte.explicito,
@@ -2247,9 +2385,6 @@ graficoResorte = {
       line: {color: "#F26B5B", width: 2.5}
     }
   ], {
-    title: {
-      text: `Sistema masa-resorte — Δt ≈ ${dtResorte.toFixed(2)}`
-    },
 
     grid: {
       rows: 2,
@@ -2278,8 +2413,9 @@ graficoResorte = {
       automargin: true
     },
 
+    dragmode: false,
     height: 470,
-    margin: {t: 55, r: 25, b: 45, l: 100},
+    margin: {t: 25, r: 25, b: 45, l: 100},
     paper_bgcolor: "white",
     plot_bgcolor: "white",
     legend: {
@@ -2290,8 +2426,22 @@ graficoResorte = {
     }
   }, {
     responsive: true,
-    displayModeBar: false
+    displayModeBar: false,
+    scrollZoom: false,
+    doubleClick: false
   });
+
+  // Redimensiona Plotly cuando Quarto inserta el gráfico en la página.
+  let anchoAnterior = 0;
+  const observador = new ResizeObserver(([entrada]) => {
+    const ancho = entrada.contentRect.width;
+    if (ancho > 0 && Math.abs(ancho - anchoAnterior) > 1) {
+      anchoAnterior = ancho;
+      Plotly.Plots.resize(graficoInterno);
+    }
+  });
+  observador.observe(contenedor);
+  invalidation.then(() => observador.disconnect());
 
   return contenedor;
 }

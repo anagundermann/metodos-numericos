@@ -198,18 +198,40 @@ a.tarjeta-proyecto .tarjeta-enlace {
   --color-seccion-linea: #e2e8f0;
 }
 
-/* Títulos principales de los tres modelos */
+
+/* Secciones completas de los tres modelos */
+
 #ecuación-del-calor,
 #ecuación-de-transporte,
 #sistema-masa-resorte-no-lineal {
+  position: relative;
   color: var(--color-seccion-titulo);
   border-bottom: 1px solid var(--color-seccion-linea);
-  border-left: 5px solid var(--color-seccion-acento);
+  border-left: 5px solid transparent;
   padding: 12px 0 16px 20px;
-  margin-top: 65px;
-  margin-bottom: 30px;
+  margin-top: 24px;
+  /* Reduce el espacio antes de cada sección */
+  margin-bottom: 12px;
+  /* Reduce el espacio después de cada sección */
   scroll-margin-top: 25px;
 }
+
+/* Línea azul que comienza a la altura del título */
+
+#ecuación-del-calor::before,
+#ecuación-de-transporte::before,
+#sistema-masa-resorte-no-lineal::before {
+  content: "";
+  position: absolute;
+  top: 45px;
+  /* Sube el inicio de la línea para alinearlo con el título */
+  bottom: 0;
+  left: -5px;
+  width: 5px;
+  background: var(--color-seccion-acento);
+  pointer-events: none;
+}
+
 
 /* Títulos secundarios dentro de los modelos */
 #ecuación-del-calor~section h3,
@@ -289,6 +311,9 @@ a.tarjeta-proyecto .tarjeta-enlace {
   border-radius: 16px;
   padding: 28px;
   margin: 30px 0;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .simulacion-etiqueta {
@@ -305,18 +330,40 @@ a.tarjeta-proyecto .tarjeta-enlace {
   font-size: 1.4rem;
   font-weight: 700;
   margin-bottom: 12px;
+  overflow-wrap: break-word;
+}
+
+.simulacion-titulo p {
+  margin: 0;
+}
+
+.simulacion-titulo-dinamico {
+  margin: 10px 0 6px;
+  font-size: 1.15rem;
 }
 
 .simulacion-descripcion {
   color: var(--color-simulacion-texto);
   line-height: 1.7;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
+}
+
+.simulacion-descripcion p:last-child {
+  margin-bottom: 0;
 }
 
 .simulacion-grafico {
   width: 100%;
   min-width: 0;
-  margin: 20px 0;
+  margin: 8px 0 12px;
+}
+
+.simulacion-cientifica .cell,
+.simulacion-cientifica .cell-output,
+.simulacion-cientifica .cell-output-display,
+.simulacion-cientifica .js-plotly-plot {
+  max-width: 100%;
+  min-width: 0;
 }
 
 /* Interpretación de resultados */
@@ -344,7 +391,16 @@ a.tarjeta-proyecto .tarjeta-enlace {
 
 @media (max-width: 650px) {
   .simulacion-cientifica {
-    padding: 18px;
+    padding: 18px 12px;
+  }
+
+  .simulacion-titulo {
+    font-size: 1.15rem;
+    line-height: 1.35;
+  }
+
+  .simulacion-titulo-dinamico {
+    font-size: 1rem;
   }
 
   .simulacion-resultado {
@@ -459,5 +515,27 @@ input[type="range"] {
 @media (max-width: 650px) {
   .indicadores-numericos {
     grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================
+   CONTENCIÓN HORIZONTAL EN CELULARES
+   Mantiene el índice lateral sin cambios en computador
+   ========================================= */
+
+@media (max-width: 650px) {
+
+  html,
+  body {
+    overflow-x: clip;
+  }
+
+  #quarto-content,
+  main.content,
+  .simulacion-cientifica,
+  .simulacion-grafico {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
