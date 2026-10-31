@@ -446,7 +446,7 @@ $$
 +(1+2\lambda)u_i^{n+1}
 -\lambda u_{i+1}^{n+1}
 =
-u_i^n+\Delta t(x_i^2+3).
+u_i^n+\Delta t(x_i^2+3)
 $$
 
 
@@ -608,7 +608,7 @@ El método de Euler implícito calcula la distribución de temperatura del sigui
 A diferencia del esquema explícito, su estabilidad no exige que se cumpla la restricción
 
 $$
-\lambda=\frac{\Delta t}{(\Delta x)^2}\leq\frac12.
+\lambda=\frac{\Delta t}{(\Delta x)^2}\leq\frac12
 $$
 
 Sin embargo, la estabilidad incondicional no garantiza exactitud: aumentar excesivamente el paso temporal puede reducir la precisión de la aproximación.
@@ -762,7 +762,7 @@ Estas diferencias se cuantifican en los apartados siguientes. Su magnitud no rep
 Para cada posición e instante, calculamos:
 
 $$
-D(x_i,t_n)=\left|u_{\mathrm{exp}}(x_i,t_n)-u_{\mathrm{imp}}(x_i,t_n)\right|.
+D(x_i,t_n)=\left|u_{\mathrm{exp}}(x_i,t_n)-u_{\mathrm{imp}}(x_i,t_n)\right|
 $$
 
 
@@ -874,7 +874,7 @@ Calculamos la máxima diferencia absoluta entre ambos métodos en cada instante:
 
 $$
 D_{\max}(t_n)=\max_i
-\left|u_{\mathrm{exp}}(x_i,t_n)-u_{\mathrm{imp}}(x_i,t_n)\right|.
+\left|u_{\mathrm{exp}}(x_i,t_n)-u_{\mathrm{imp}}(x_i,t_n)\right|
 $$
 
 ```{python}
@@ -951,7 +951,7 @@ EXPERIMENTO INTERACTIVO 01 · ECUACIÓN DEL CALOR
 Para la ecuación del calor unidimensional, consideramos el parámetro de difusión:
 
 $$
-r=\frac{\alpha\Delta t}{(\Delta x)^2}.
+r=\frac{\alpha\Delta t}{(\Delta x)^2}
 $$
 
 El esquema explícito con diferencias centrales satisface la condición de estabilidad $0\leq r\leq 0.5$. En cambio, el esquema implícito de Euler hacia atrás es incondicionalmente estable para este problema lineal.
@@ -1138,7 +1138,7 @@ indicadorCalor = {
 El esquema de Euler explícito para la ecuación del calor puede escribirse como:
 
 $$
-u_j^{n+1}=r\,u_{j-1}^{n}+(1-2r)\,u_j^{n}+r\,u_{j+1}^{n}.
+u_j^{n+1}=r\,u_{j-1}^{n}+(1-2r)\,u_j^{n}+r\,u_{j+1}^{n}
 $$
 
 Cuando $0\leq r\leq0.5$, los tres coeficientes son no negativos y suman 1. Por lo tanto, cada nuevo valor es una **combinación convexa** de las temperaturas del paso anterior, lo que evita la aparición de nuevos máximos o mínimos.
@@ -1215,7 +1215,7 @@ CONDICIONES INICIALES, DE FRONTERA Y DOMINIO
 **Condición de frontera de entrada**
 
 $$
-h(0,t)=0,\qquad t\in[0,2].
+h(0,t)=0,\qquad t\in[0,2]
 $$
 
 
@@ -1239,13 +1239,13 @@ Para $c>0$, utilizamos el esquema:
 $$
 h_i^{n+1}
 =
-h_i^n-\lambda(h_i^n-h_{i-1}^n),
+h_i^n-\lambda(h_i^n-h_{i-1}^n)
 $$
 
 donde
 
 $$
-\lambda=\frac{c\Delta t}{\Delta x}=0.75.
+\lambda=\frac{c\Delta t}{\Delta x}=0.75
 $$
 
 ## Simulación interactiva del transporte
@@ -1381,7 +1381,7 @@ fig_trans.show(
 El pulso se desplaza hacia la derecha, de acuerdo con la velocidad positiva de propagación:
 
 $$
-c=1.5.
+c=1.5
 $$
 
 Durante la evolución se observa que los bordes inicialmente abruptos del pulso se suavizan progresivamente. Este comportamiento es característico de la difusión numérica introducida por el esquema upwind de primer orden.
@@ -1395,7 +1395,7 @@ $$
 por lo que se cumple la condición de estabilidad:
 
 $$
-0\leq\lambda\leq1.
+0\leq\lambda\leq1
 $$
 
 
@@ -1409,7 +1409,7 @@ $$
 La solución exacta de la ecuación de transporte es:
 
 $$
-h(x,t)=h_0(x-ct), \qquad c=1.5.
+h(x,t)=h_0(x-ct), \qquad c=1.5
 $$
 
 Por lo tanto, el pulso se desplaza hacia la derecha sin deformarse. En cambio, el método *upwind* introduce difusión numérica, suavizando progresivamente sus bordes.
@@ -1549,7 +1549,7 @@ Este comportamiento permite identificar el efecto de la difusión numérica. En 
 Como conocemos la solución exacta, podemos calcular el error absoluto en cada punto:
 
 $$
-e_i^n = \left|h_i^n-h(x_i,t_n)\right|.
+e_i^n = \left|h_i^n-h(x_i,t_n)\right|
 $$
 
 Para resumir el error utilizamos dos medidas:
@@ -1746,7 +1746,7 @@ grafico = {
 El esquema *upwind* puede reescribirse como:
 
 $$
-u_j^{n+1}=(1-\lambda)u_j^n+\lambda u_{j-1}^n.
+u_j^{n+1}=(1-\lambda)u_j^n+\lambda u_{j-1}^n
 $$
 
 Cuando $0\leq\lambda\leq1$, ambos coeficientes son no negativos y suman 1. Por lo tanto, cada nuevo valor es una **combinación convexa** de los valores anteriores, lo que evita la aparición de nuevos máximos o mínimos.
@@ -1785,7 +1785,7 @@ Para aplicar los métodos numéricos, transformamos la ecuación diferencial de 
 Definimos la velocidad como $v(t)=x'(t)$. Entonces, $x''(t)=v'(t)$ y, al despejar la aceleración en la ecuación original, obtenemos:
 
 $$
-v'(t)=\cos(2t)-0.2v(t)-x(t)-5x(t)^3.
+v'(t)=\cos(2t)-0.2v(t)-x(t)-5x(t)^3
 $$
 
 Por lo tanto, el sistema equivalente de primer orden es:
