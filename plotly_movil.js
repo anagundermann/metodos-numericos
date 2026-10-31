@@ -13,13 +13,20 @@
       const tieneSlider = sliders.length > 0;
       const tieneBotones = (grafico.layout.updatemenus || []).length > 0;
       const tieneLeyenda = grafico._fullLayout.showlegend;
+      // Identificar la comparación de Euler y Runge-Kutta.
+      const titulo = grafico.closest('.simulacion-cientifica')
+        ?.querySelector('.simulacion-titulo')?.textContent || '';
+
+      const esComparacionResorte = titulo.includes(
+        'Comparación de Euler y Runge-Kutta de cuarto orden'
+      );
 
       if (!tieneSlider && !tieneLeyenda) return;
       ajustados.add(grafico);
 
       const cambios = {
         'dragmode': false,
-        'hovermode': false,
+        'hovermode': esComparacionResorte ? 'x unified' : false,
         'height': tieneSlider ? 545 : 450,
         'margin.l': 55,
         'margin.r': 12,
