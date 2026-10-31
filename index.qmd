@@ -584,16 +584,27 @@ fig_imp.update_layout(
     ],
 )
 
+
 fig_imp.update_xaxes(automargin=True)
 fig_imp.update_yaxes(automargin=True)
-fig_imp.show(
-    config={
-        "displayModeBar": False,
-        "scrollZoom": False,
-        "doubleClick": False,
-        "responsive": True,
-    }
+
+display(
+    HTML(
+        fig_imp.to_html(
+            full_html=False,
+            include_plotlyjs="cdn",
+            include_mathjax=False,
+            auto_play=True,
+            config={
+                "displayModeBar": False,
+                "scrollZoom": False,
+                "doubleClick": False,
+                "responsive": True,
+            },
+        )
+    )
 )
+
 ```
 
 
@@ -729,16 +740,27 @@ fig_comp.update_layout(
     margin=dict(l=65, r=20, t=65, b=100),
 )
 
+
 fig_comp.update_xaxes(automargin=True)
 fig_comp.update_yaxes(automargin=True)
-fig_comp.show(
-    config={
-        "displayModeBar": False,
-        "scrollZoom": False,
-        "doubleClick": False,
-        "responsive": True,
-    }
+
+display(
+    HTML(
+        fig_comp.to_html(
+            full_html=False,
+            include_plotlyjs="cdn",
+            include_mathjax=False,
+            auto_play=True,
+            config={
+                "displayModeBar": False,
+                "scrollZoom": False,
+                "doubleClick": False,
+                "responsive": True,
+            },
+        )
+    )
 )
+
 ```
 
 :::
@@ -838,16 +860,27 @@ fig_dif.update_layout(
     ],
 )
 
+
 fig_dif.update_xaxes(automargin=True)
 fig_dif.update_yaxes(automargin=True)
-fig_dif.show(
-    config={
-        "displayModeBar": False,
-        "scrollZoom": False,
-        "doubleClick": False,
-        "responsive": True,
-    }
+
+display(
+    HTML(
+        fig_dif.to_html(
+            full_html=False,
+            include_plotlyjs="cdn",
+            include_mathjax=False,
+            auto_play=True,
+            config={
+                "displayModeBar": False,
+                "scrollZoom": False,
+                "doubleClick": False,
+                "responsive": True,
+            },
+        )
+    )
 )
+
 ```
 
 :::
@@ -1358,16 +1391,27 @@ fig_trans.update_layout(
     sliders=slider_trans,
 )
 
+
 fig_trans.update_xaxes(automargin=True)
 fig_trans.update_yaxes(automargin=True)
-fig_trans.show(
-    config={
-        "displayModeBar": False,
-        "scrollZoom": False,
-        "doubleClick": False,
-        "responsive": True,
-    }
+
+display(
+    HTML(
+        fig_trans.to_html(
+            full_html=False,
+            include_plotlyjs="cdn",
+            include_mathjax=False,
+            auto_play=True,
+            config={
+                "displayModeBar": False,
+                "scrollZoom": False,
+                "doubleClick": False,
+                "responsive": True,
+            },
+        )
+    )
 )
+
 ```
 
 
@@ -1515,16 +1559,27 @@ fig_comparacion_trans.update_layout(
     legend=dict(orientation="h", y=1.12, x=0),
 )
 
+
 fig_comparacion_trans.update_xaxes(automargin=True)
 fig_comparacion_trans.update_yaxes(automargin=True)
-fig_comparacion_trans.show(
-    config={
-        "displayModeBar": False,
-        "scrollZoom": False,
-        "doubleClick": False,
-        "responsive": True,
-    }
+
+display(
+    HTML(
+        fig_comparacion_trans.to_html(
+            full_html=False,
+            include_plotlyjs="cdn",
+            include_mathjax=False,
+            auto_play=True,
+            config={
+                "displayModeBar": False,
+                "scrollZoom": False,
+                "doubleClick": False,
+                "responsive": True,
+            },
+        )
+    )
 )
+
 ```
 
 :::
@@ -1939,13 +1994,22 @@ fig_resorte.update_layout(
 
 fig_resorte.update_xaxes(automargin=True)
 fig_resorte.update_yaxes(automargin=True)
-fig_resorte.show(
-    config={
-        "displayModeBar": False,
-        "scrollZoom": False,
-        "doubleClick": False,
-        "responsive": True,
-    }
+
+display(
+    HTML(
+        fig_resorte.to_html(
+            full_html=False,
+            include_plotlyjs="cdn",
+            include_mathjax=False,
+            auto_play=True,
+            config={
+                "displayModeBar": False,
+                "scrollZoom": False,
+                "doubleClick": False,
+                "responsive": True,
+            },
+        )
+    )
 )
 ```
 
@@ -2060,13 +2124,22 @@ fig_fase.update_layout(
 
 fig_fase.update_xaxes(automargin=True)
 fig_fase.update_yaxes(automargin=True)
-fig_fase.show(
-    config={
-        "displayModeBar": False,
-        "scrollZoom": False,
-        "doubleClick": False,
-        "responsive": True,
-    }
+
+display(
+    HTML(
+        fig_fase.to_html(
+            full_html=False,
+            include_plotlyjs="cdn",
+            include_mathjax=False,
+            auto_play=True,
+            config={
+                "displayModeBar": False,
+                "scrollZoom": False,
+                "doubleClick": False,
+                "responsive": True,
+            },
+        )
+    )
 )
 ```
 
